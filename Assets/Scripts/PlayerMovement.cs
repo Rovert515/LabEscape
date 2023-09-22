@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float moveTime;
 
-    private bool moving;
-    private Vector3Int gridPos;
+    public bool moving { get; private set; }
+    public Vector3Int gridPos { get; private set; }
 
     private void Awake()
     {
@@ -21,48 +21,8 @@ public class PlayerMovement : MonoBehaviour
     {
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
     }
-    private void Update()
-    {
-        if (!moving && !LevelController.instance.shifting)
-        {
-            Vector3Int inputDir = Vector3Int.zero;
-            if (Input.GetButtonDown("Right"))
-            {
-                inputDir = Vector3Int.right;
-            }
-            else if (Input.GetButtonDown("Left"))
-            {
-                inputDir = Vector3Int.left;
-            }
-            else if (Input.GetButtonDown("Up"))
-            {
-                inputDir = Vector3Int.up;
-            }
-            else if (Input.GetButtonDown("Down"))
-            {
-                inputDir = Vector3Int.down;
-            }
-            if (inputDir != Vector3Int.zero)
-            {
-                if (Input.GetButton("Shift"))
-                {
-                    if (LevelController.instance.InBounds(gridPos + inputDir))
-                    {
-                        if (LevelController.instance.ShiftFrom(gridPos, inputDir))
-                        {
-                            StartCoroutine(RideWithBlock());
-                            gridPos += inputDir;
-                        }
-                    }
-                }
-                else
-                {
-                    Move(inputDir);
-                }
-            }
-        }
-    }
-    private bool Move(Vector3Int dir)
+    
+    public bool Move(Vector3Int dir)
     {
         if (LevelController.instance.InBounds(gridPos + dir))
         {
@@ -70,6 +30,19 @@ public class PlayerMovement : MonoBehaviour
             {
                 gridPos += dir;
                 transform.position = LevelController.instance.grid.GetCellCenterWorld(gridPos);
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool Shift(Vector3Int dir)
+    {
+        if (LevelController.instance.InBounds(gridPos + dir))
+        {
+            if (LevelController.instance.ShiftFrom(gridPos, dir))
+            {
+                StartCoroutine(RideWithBlock());
+                gridPos += dir;
                 return true;
             }
         }

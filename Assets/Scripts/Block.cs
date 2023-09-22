@@ -43,7 +43,7 @@ public class Block : MonoBehaviour
                 tilemap.SetTile(new Vector3Int(1, 1) + dir, wallTile);
             }
         }
-        if (Random.Range(0f, 1f) <= LevelController.instance.keyChance)
+        if (Random.Range(0f, 1f) <= LevelController.instance.manaChance)
         {
             Instantiate(keyPrefab, grid.CellToWorld(new Vector3Int(1, 1)) + grid.cellSize / 2, Quaternion.identity, transform);
         }

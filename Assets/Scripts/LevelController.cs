@@ -13,7 +13,7 @@ public class LevelController : MonoBehaviour
     public GameObject blockPrefab;
     public int levelWidth;
     public float density;
-    public float keyChance;
+    public float manaChance;
     public float shiftTime;
 
     public bool shifting { get; private set; }
