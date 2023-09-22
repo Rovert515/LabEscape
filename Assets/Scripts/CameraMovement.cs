@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    public Vector3 desiredPos;
+    public float followSpeed;
+    
+    private Vector3 desiredPos;
     private void Awake()
     {
         desiredPos = transform.position;
     }
     private void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, desiredPos, 0.01f);
+        desiredPos.y = PlayerMovement.instance.transform.position.y;
+        transform.position += (desiredPos - transform.position) * followSpeed * Time.deltaTime;
     }
 }
