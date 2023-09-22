@@ -1615,8 +1615,6 @@ MonoBehaviour:
   blockPrefab: {fileID: 8562496135023213370, guid: 5f4dbc4c8ed867e40ac024c9463eca85, type: 3}
   levelWidth: 5
   levelHeight: 7
-  density: 0.2
-  keyChance: 0.04
 --- !u!212 &2186868200063409185
 SpriteRenderer:
   m_ObjectHideFlags: 0

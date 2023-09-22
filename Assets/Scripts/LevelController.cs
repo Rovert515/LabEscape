@@ -8,28 +8,31 @@ using UnityEngine.UIElements;
 
 public class LevelController : MonoBehaviour
 {
+    public static LevelController instance { get; private set; }
+
     public GameObject blockPrefab;
-    private Grid grid;
     public int levelWidth;
     public int levelHeight;
-    public float density;
-    public float keyChance;
-    private Vector3 cellShift;
+
+    public Grid grid { get; private set; }
+    public Vector3 cellShift { get; private set; }
     private float lastShiftTime;
 
     private void Awake()
     {
+        instance = this;
+
         grid = GetComponent<Grid>();
         cellShift = grid.cellSize + grid.cellGap;
         lastShiftTime = Time.time;
     }
     private void Start()
     {
-        MakeSquare();
+        BuildInitialLevel();
     }
     private void Update()
     {
-        if (Time.time > lastShiftTime + 0.3f)
+        if (Time.time > lastShiftTime + Block.shiftTime)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
@@ -49,7 +52,7 @@ public class LevelController : MonoBehaviour
             }
         }
     }
-    private void MakeSquare()
+    private void BuildInitialLevel()
     {
         for (int x = 0; x < levelWidth; x++)
         {
@@ -59,7 +62,7 @@ public class LevelController : MonoBehaviour
             }
         }
     }
-    
+
     private Block CreateBlock(Vector3Int pos)
     {
         Block block = Instantiate(blockPrefab, grid.CellToWorld(pos), Quaternion.identity, transform).GetComponent<Block>();
@@ -70,9 +73,9 @@ public class LevelController : MonoBehaviour
         foreach (Transform child in transform)
         {
             Block block = child.GetComponent<Block>();
-            if (block)
+            if (block != null)
             {
-                if (grid.WorldToCell(block.desiredPos) == pos)
+                if (block.gridPos == pos)
                 {
                     return block;
                 }
@@ -80,7 +83,6 @@ public class LevelController : MonoBehaviour
         }
         return null;
     }
-
     private List<Block> GetColumn(int n)
     {
         List<Block> column = new List<Block>();
@@ -105,7 +107,6 @@ public class LevelController : MonoBehaviour
         if (shift == 1)
         {
             addedBlock = CreateBlock(new Vector3Int(n, -1));
-
         }
         else
         {
@@ -116,7 +117,7 @@ public class LevelController : MonoBehaviour
         foreach (Block block in column)
         {
             block.Shift(new Vector3Int(0, shift));
-            if (block.GetGridPos().y < 0 || block.GetGridPos().y >= levelHeight)
+            if (block.gridPos.y < 0 || block.gridPos.y >= levelHeight)
             {
                 block.Fade();
             }
@@ -129,7 +130,6 @@ public class LevelController : MonoBehaviour
         if (shift == 1)
         {
             addedBlock = CreateBlock(new Vector3Int(-1, n));
-
         }
         else
         {
@@ -140,7 +140,7 @@ public class LevelController : MonoBehaviour
         foreach (Block block in row)
         {
             block.Shift(new Vector3Int(shift, 0));
-            if (block.GetGridPos().x < 0 || block.GetGridPos().x >= levelWidth)
+            if (block.gridPos.x < 0 || block.gridPos.x >= levelWidth)
             {
                 block.Fade();
             }

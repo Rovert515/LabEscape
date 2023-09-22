@@ -7,64 +7,61 @@ using UnityEngine.Tilemaps;
 public class Block : MonoBehaviour
 {
 
-    private Tilemap tilemap;
+    public static float density = 0.3f;
+    public static float keyChance = 0.05f;
+    public static float shiftTime = 0.1f;
+
     public Tile wallTile;
     public GameObject keyPrefab;
-    private LevelController levelController;
-    private Grid myGrid;
-    private Grid levelGrid;
-    public Vector3 desiredPos;
-    public bool doomed;
+    public Vector3Int gridPos;
+
+    private Grid grid;
+    private Tilemap tilemap;
+
+
     private void Awake()
     {
-        doomed = false;
+        grid = GetComponent<Grid>();
         tilemap = GetComponentInChildren<Tilemap>();
-        myGrid = GetComponent<Grid>();
-        levelGrid = transform.parent.GetComponent<Grid>();
-        levelController = GetComponentInParent<LevelController>();
-        desiredPos = transform.position;
+
+        gridPos = LevelController.instance.grid.WorldToCell(transform.position);
     }
     private void Start()
     {
         Generate();
-    }
-    private void Update()
-    {
-        if (doomed && Vector3.Distance(transform.position, desiredPos) < 0.01)
-        {
-            Destroy(gameObject);
-        }
-        transform.position += (desiredPos - transform.position) * Time.deltaTime * 10;
     }
     public void Generate()
     {
         Vector3Int[] compass = { Vector3Int.right, Vector3Int.down, Vector3Int.up, Vector3Int.left };
         foreach (Vector3Int dir in compass)
         {
-            if (Random.Range(0f, 1f) <= levelController.density)
+            if (Random.Range(0f, 1f) < density)
             {
                 tilemap.SetTile(new Vector3Int(1, 1) + dir, wallTile);
             }
         }
-        if (Random.Range(0f, 1f) <= levelController.keyChance)
+        if (Random.Range(0f, 1f) <= keyChance)
         {
-            Instantiate(keyPrefab, myGrid.CellToWorld(new Vector3Int(1, 1)) + myGrid.cellSize/2, Quaternion.identity, transform);
+            Instantiate(keyPrefab, grid.CellToWorld(new Vector3Int(1, 1)) + grid.cellSize / 2, Quaternion.identity, transform);
         }
     }
     public void Shift(Vector3Int shift)
     {
-        Vector3 cellShift = levelGrid.cellSize + levelGrid.cellGap;
-        desiredPos.x += shift.x * cellShift.x;
-        desiredPos.y += shift.y * cellShift.y;
+        gridPos += shift;
+        StopCoroutine(ShiftRoutine());
+        StartCoroutine(ShiftRoutine());
     }
-    public void SetPosition()
+    IEnumerator ShiftRoutine()
     {
-        transform.position = desiredPos;
-    }
-    public void SetPosition(Vector3 pos)
-    {
-        desiredPos = pos;
-        transform.position = desiredPos;
+        float startTime = Time.time;
+        Vector3 targetPos = LevelController.instance.grid.CellToWorld(gridPos);
+        Vector3 startPos = transform.position;
+        while (Time.time < startTime + shiftTime)
+        {
+            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / shiftTime);
+            yield return null;
+        }
+        transform.position = targetPos;
     }
     public void Fade()
     {
@@ -72,11 +69,7 @@ public class Block : MonoBehaviour
     }
     IEnumerator FadeRoutine()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(shiftTime);
         Destroy(gameObject);
-    }
-    public Vector3Int GetGridPos()
-    {
-        return levelGrid.WorldToCell(desiredPos);
     }
 }
