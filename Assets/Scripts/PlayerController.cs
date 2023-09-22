@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
                         if (PlayerMovement.instance.Shift(inputDir))
                         {
                             manaCount--;
+                            UIManager.instance.UpdateUI();
                         }
                     }
                 }
@@ -52,6 +53,7 @@ public class PlayerController : MonoBehaviour
                     if (mana != null)
                     {
                         manaCount += mana.value;
+                        UIManager.instance.UpdateUI();
                         Destroy(mana.gameObject);
                     }
                 }

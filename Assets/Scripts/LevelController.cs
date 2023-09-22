@@ -73,6 +73,7 @@ public class LevelController : MonoBehaviour
             }
         }
         bottomRow++;
+        UIManager.instance.UpdateUI();
     }
     private Block CreateBlock(Vector3Int pos)
     {
