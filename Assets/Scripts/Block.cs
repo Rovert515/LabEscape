@@ -6,11 +6,6 @@ using UnityEngine.Tilemaps;
 
 public class Block : MonoBehaviour
 {
-
-    public static float density = 0.3f;
-    public static float keyChance = 0.05f;
-    public static float shiftTime = 0.1f;
-
     public Tile wallTile;
     public GameObject keyPrefab;
     public Vector3Int gridPos;
@@ -35,12 +30,12 @@ public class Block : MonoBehaviour
         Vector3Int[] compass = { Vector3Int.right, Vector3Int.down, Vector3Int.up, Vector3Int.left };
         foreach (Vector3Int dir in compass)
         {
-            if (Random.Range(0f, 1f) < density)
+            if (Random.Range(0f, 1f) < LevelController.instance.density)
             {
                 tilemap.SetTile(new Vector3Int(1, 1) + dir, wallTile);
             }
         }
-        if (Random.Range(0f, 1f) <= keyChance)
+        if (Random.Range(0f, 1f) <= LevelController.instance.keyChance)
         {
             Instantiate(keyPrefab, grid.CellToWorld(new Vector3Int(1, 1)) + grid.cellSize / 2, Quaternion.identity, transform);
         }
@@ -56,9 +51,9 @@ public class Block : MonoBehaviour
         float startTime = Time.time;
         Vector3 targetPos = LevelController.instance.grid.CellToWorld(gridPos);
         Vector3 startPos = transform.position;
-        while (Time.time < startTime + shiftTime)
+        while (Time.time < startTime + LevelController.instance.shiftTime)
         {
-            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / shiftTime);
+            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / LevelController.instance.shiftTime);
             yield return null;
         }
         transform.position = targetPos;
@@ -69,7 +64,11 @@ public class Block : MonoBehaviour
     }
     IEnumerator FadeRoutine()
     {
-        yield return new WaitForSeconds(shiftTime);
+        yield return new WaitForSeconds(LevelController.instance.shiftTime);
         Destroy(gameObject);
+    }
+    public bool IsOpen(Vector3Int dir)
+    {
+        return !tilemap.HasTile(new Vector3Int(1, 1) + dir);
     }
 }

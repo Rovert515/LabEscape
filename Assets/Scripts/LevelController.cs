@@ -13,9 +13,14 @@ public class LevelController : MonoBehaviour
     public GameObject blockPrefab;
     public int levelWidth;
     public int levelHeight;
+    public float density;
+    public float keyChance;
+    public float shiftTime;
 
+    public bool shifting { get; private set; }
     public Grid grid { get; private set; }
     public Vector3 cellShift { get; private set; }
+
     private float lastShiftTime;
 
     private void Awake()
@@ -24,7 +29,8 @@ public class LevelController : MonoBehaviour
 
         grid = GetComponent<Grid>();
         cellShift = grid.cellSize + grid.cellGap;
-        lastShiftTime = Time.time;
+        lastShiftTime = -shiftTime;
+        shifting = false;
     }
     private void Start()
     {
@@ -32,24 +38,13 @@ public class LevelController : MonoBehaviour
     }
     private void Update()
     {
-        if (Time.time > lastShiftTime + Block.shiftTime)
+        if (Time.time > lastShiftTime + shiftTime)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                ShiftColumn(2, 1);
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                ShiftColumn(2, -1);
-            }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                ShiftRow(3, 1);
-            }
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                ShiftRow(3, -1);
-            }
+            shifting = false;
+        }
+        else
+        {
+            shifting = true;
         }
     }
     private void BuildInitialLevel()
@@ -68,7 +63,7 @@ public class LevelController : MonoBehaviour
         Block block = Instantiate(blockPrefab, grid.CellToWorld(pos), Quaternion.identity, transform).GetComponent<Block>();
         return block;
     }
-    private Block GetBlock(Vector3Int pos)
+    public Block GetBlock(Vector3Int pos)
     {
         foreach (Transform child in transform)
         {
@@ -101,50 +96,77 @@ public class LevelController : MonoBehaviour
         }
         return row;
     }
-    private void ShiftColumn(int n, int shift)
+    public bool ShiftColumn(int n, int shift)
     {
-        Block addedBlock = null;
-        if (shift == 1)
+        if (!shifting)
         {
-            addedBlock = CreateBlock(new Vector3Int(n, -1));
-        }
-        else
-        {
-            addedBlock = CreateBlock(new Vector3Int(n, levelHeight));
-        }
-        List<Block> column = GetColumn(n);
-        column.Add(addedBlock);
-        foreach (Block block in column)
-        {
-            block.Shift(new Vector3Int(0, shift));
-            if (block.gridPos.y < 0 || block.gridPos.y >= levelHeight)
+            Block addedBlock = null;
+            if (shift == 1)
             {
-                block.Fade();
+                addedBlock = CreateBlock(new Vector3Int(n, -1));
             }
+            else
+            {
+                addedBlock = CreateBlock(new Vector3Int(n, levelHeight));
+            }
+            List<Block> column = GetColumn(n);
+            column.Add(addedBlock);
+            foreach (Block block in column)
+            {
+                block.Shift(new Vector3Int(0, shift));
+                if (block.gridPos.y < 0 || block.gridPos.y >= levelHeight)
+                {
+                    block.Fade();
+                }
+            }
+            lastShiftTime = Time.time;
+            return true;
         }
-        lastShiftTime = Time.time;
+        return false;
+        
     }
-    private void ShiftRow(int n, int shift)
+    public bool ShiftRow(int n, int shift)
     {
-        Block addedBlock = null;
-        if (shift == 1)
+        if (!shifting)
         {
-            addedBlock = CreateBlock(new Vector3Int(-1, n));
-        }
-        else
-        {
-            addedBlock = CreateBlock(new Vector3Int(levelWidth, n));
-        }
-        List<Block> row = GetRow(n);
-        row.Add(addedBlock);
-        foreach (Block block in row)
-        {
-            block.Shift(new Vector3Int(shift, 0));
-            if (block.gridPos.x < 0 || block.gridPos.x >= levelWidth)
+            Block addedBlock = null;
+            if (shift == 1)
             {
-                block.Fade();
+                addedBlock = CreateBlock(new Vector3Int(-1, n));
             }
+            else
+            {
+                addedBlock = CreateBlock(new Vector3Int(levelWidth, n));
+            }
+            List<Block> row = GetRow(n);
+            row.Add(addedBlock);
+            foreach (Block block in row)
+            {
+                block.Shift(new Vector3Int(shift, 0));
+                if (!InBounds(block.gridPos))
+                {
+                    block.Fade();
+                }
+            }
+            lastShiftTime = Time.time;
+            return true;
         }
-        lastShiftTime = Time.time;
+        return false;
+    }
+    public bool ShiftFrom(Vector3Int origin, Vector3Int dir)
+    {
+        if (dir.x == 0)
+        {
+            return ShiftColumn(origin.x, dir.y);
+        }
+        else if (dir.y == 0)
+        {
+            return ShiftRow(origin.y, dir.x);
+        }
+        return false;
+    }
+    public bool InBounds(Vector3Int pos)
+    {
+        return (pos.x >= 0) && (pos.y >= 0) && (pos.x < levelWidth) && (pos.y < levelHeight);
     }
 }
