@@ -10,6 +10,8 @@ public class Block : MonoBehaviour
     public GameObject keyPrefab;
     public Vector3Int gridPos;
 
+    public bool fading { get; private set; }
+
     private Grid grid;
     private Tilemap tilemap;
 
@@ -19,11 +21,17 @@ public class Block : MonoBehaviour
         grid = GetComponent<Grid>();
         tilemap = GetComponentInChildren<Tilemap>();
 
+        fading = false;
+
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
     }
     private void Start()
     {
         Generate();
+    }
+    private void Update()
+    {
+        
     }
     public void Generate()
     {
@@ -60,6 +68,7 @@ public class Block : MonoBehaviour
     }
     public void Fade()
     {
+        fading = true;
         StartCoroutine(FadeRoutine());
     }
     IEnumerator FadeRoutine()

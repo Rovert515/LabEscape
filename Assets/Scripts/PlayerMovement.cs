@@ -48,9 +48,11 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (LevelController.instance.InBounds(gridPos + inputDir))
                     {
-                        StartCoroutine(RideWithBlock());
-                        gridPos += inputDir;
-                        LevelController.instance.ShiftFrom(gridPos, inputDir);
+                        if (LevelController.instance.ShiftFrom(gridPos, inputDir))
+                        {
+                            StartCoroutine(RideWithBlock());
+                            gridPos += inputDir;
+                        }
                     }
                 }
                 else
@@ -78,5 +80,6 @@ public class PlayerMovement : MonoBehaviour
         transform.parent = LevelController.instance.GetBlock(gridPos).transform;
         yield return new WaitForSeconds(LevelController.instance.shiftTime);
         transform.parent = LevelController.instance.transform;
+        transform.position = LevelController.instance.grid.GetCellCenterWorld(gridPos);
     }
 }

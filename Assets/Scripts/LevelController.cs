@@ -12,7 +12,6 @@ public class LevelController : MonoBehaviour
 
     public GameObject blockPrefab;
     public int levelWidth;
-    public int levelHeight;
     public float density;
     public float keyChance;
     public float shiftTime;
@@ -20,6 +19,8 @@ public class LevelController : MonoBehaviour
     public bool shifting { get; private set; }
     public Grid grid { get; private set; }
     public Vector3 cellShift { get; private set; }
+    public int topRow { get; private set; }
+    public int bottomRow { get; private set; }
 
     private float lastShiftTime;
 
@@ -31,10 +32,8 @@ public class LevelController : MonoBehaviour
         cellShift = grid.cellSize + grid.cellGap;
         lastShiftTime = -shiftTime;
         shifting = false;
-    }
-    private void Start()
-    {
-        BuildInitialLevel();
+        topRow = 0;
+        bottomRow = 0;
     }
     private void Update()
     {
@@ -46,18 +45,35 @@ public class LevelController : MonoBehaviour
         {
             shifting = true;
         }
+        if (Camera.main.ViewportToWorldPoint(Vector3.up).y > grid.CellToWorld(new Vector3Int(0, topRow)).y)
+        {
+            AddRow();
+        }
+        if (Camera.main.ViewportToWorldPoint(Vector3.zero).y > grid.CellToWorld(new Vector3Int(0, bottomRow + 1)).y)
+        {
+            RemoveRow();
+        }
     }
-    private void BuildInitialLevel()
+    private void AddRow()
     {
         for (int x = 0; x < levelWidth; x++)
         {
-            for (int y = 0; y < levelHeight; y++)
+            Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(x, topRow)), Quaternion.identity, transform);
+        }
+        topRow++;
+    }
+    private void RemoveRow()
+    {
+        for (int x = 0; x < levelWidth; x++)
+        {
+            Block block = GetBlock(new Vector3Int(x, bottomRow));
+            if (block != null)
             {
-                Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(x, y)), Quaternion.identity, transform);
+                Destroy(block.gameObject);
             }
         }
+        bottomRow++;
     }
-
     private Block CreateBlock(Vector3Int pos)
     {
         Block block = Instantiate(blockPrefab, grid.CellToWorld(pos), Quaternion.identity, transform).GetComponent<Block>();
@@ -70,7 +86,7 @@ public class LevelController : MonoBehaviour
             Block block = child.GetComponent<Block>();
             if (block != null)
             {
-                if (block.gridPos == pos)
+                if (block.gridPos == pos && !block.fading)
                 {
                     return block;
                 }
@@ -81,9 +97,13 @@ public class LevelController : MonoBehaviour
     private List<Block> GetColumn(int n)
     {
         List<Block> column = new List<Block>();
-        for (int y = 0; y < levelHeight; y++)
+        for (int y = bottomRow; y < topRow; y++)
         {
-            column.Add(GetBlock(new Vector3Int(n, y)));
+            Block block = GetBlock(new Vector3Int(n, y));
+            if (block != null)
+            {
+                column.Add(block);
+            }
         }
         return column;
     }
@@ -92,7 +112,11 @@ public class LevelController : MonoBehaviour
         List<Block> row = new List<Block>();
         for (int x = 0; x < levelWidth; x++)
         {
-            row.Add(GetBlock(new Vector3Int(x, n)));
+            Block block = GetBlock(new Vector3Int(x, n));
+            if (block != null)
+            {
+                row.Add(block);
+            }
         }
         return row;
     }
@@ -103,18 +127,18 @@ public class LevelController : MonoBehaviour
             Block addedBlock = null;
             if (shift == 1)
             {
-                addedBlock = CreateBlock(new Vector3Int(n, -1));
+                addedBlock = CreateBlock(new Vector3Int(n, bottomRow - 1));
             }
             else
             {
-                addedBlock = CreateBlock(new Vector3Int(n, levelHeight));
+                addedBlock = CreateBlock(new Vector3Int(n, topRow));
             }
             List<Block> column = GetColumn(n);
             column.Add(addedBlock);
             foreach (Block block in column)
             {
                 block.Shift(new Vector3Int(0, shift));
-                if (block.gridPos.y < 0 || block.gridPos.y >= levelHeight)
+                if (!InBounds(block.gridPos))
                 {
                     block.Fade();
                 }
@@ -167,6 +191,6 @@ public class LevelController : MonoBehaviour
     }
     public bool InBounds(Vector3Int pos)
     {
-        return (pos.x >= 0) && (pos.y >= 0) && (pos.x < levelWidth) && (pos.y < levelHeight);
+        return (pos.x >= 0) && (pos.y >= bottomRow) && (pos.x < levelWidth) && (pos.y < topRow);
     }
 }
