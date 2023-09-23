@@ -6,12 +6,16 @@ public class CameraMovement : MonoBehaviour
 {
     public float followSpeed;
 
+    public float bottomOfScreen { get; private set; }
+
     private Vector3 desiredPos;
     private Camera cam;
-    float bottomOfLevel;
+    private float bottomOfLevel;
+
     private void Awake()
     {
         cam = GetComponent<Camera>();
+        bottomOfScreen = transform.position.y - cam.orthographicSize;
     }
     private void Start()
     {
@@ -23,6 +27,7 @@ public class CameraMovement : MonoBehaviour
     private void Update()
     {
         bottomOfLevel = LevelController.instance.grid.CellToWorld(new Vector3Int(0, LevelController.instance.bottomRow)).y;
+        bottomOfScreen = transform.position.y - cam.orthographicSize;
         desiredPos.y = PlayerMovement.instance.transform.position.y;
         if (desiredPos.y < bottomOfLevel + cam.orthographicSize)
         {

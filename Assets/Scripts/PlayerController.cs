@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance { get; private set; }
+    public Lava lava;
 
     public int manaCount = 5;
+
     private void Awake()
     {
         instance = this;
@@ -58,6 +61,10 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+        }
+        if (transform.position.y < lava.height)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
