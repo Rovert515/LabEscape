@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
                     {
                         manaCount += mana.value;
                         UIManager.instance.UpdateUI();
-                        Destroy(mana.gameObject);
+                        mana.Fade();
                     }
                 }
             }

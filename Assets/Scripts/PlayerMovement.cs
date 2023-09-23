@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
             if (LevelController.instance.GetBlock(gridPos).IsOpen(dir) && LevelController.instance.GetBlock(gridPos + dir).IsOpen(-dir))
             {
                 gridPos += dir;
-                transform.position = LevelController.instance.CenterOfBlock(gridPos);
+                StartCoroutine(MoveRoutine());
                 return true;
             }
         }
@@ -55,5 +55,19 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(LevelController.instance.shiftTime);
         transform.parent = LevelController.instance.transform;
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
+    }
+    IEnumerator MoveRoutine()
+    {
+        moving = true;
+        float startTime = Time.time;
+        Vector3 targetPos = LevelController.instance.CenterOfBlock(gridPos);
+        Vector3 startPos = transform.position;
+        while (Time.time < startTime + moveTime)
+        {
+            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / moveTime);
+            yield return null;
+        }
+        transform.position = targetPos;
+        moving = false;
     }
 }
