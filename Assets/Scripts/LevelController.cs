@@ -77,8 +77,14 @@ public class LevelController : MonoBehaviour
     }
     private Block CreateBlock(Vector3Int pos)
     {
-        Block block = Instantiate(blockPrefab, grid.CellToWorld(pos), Quaternion.identity, transform).GetComponent<Block>();
-        return block;
+        if (GetBlock(pos) == null)
+        {
+            Block block = Instantiate(blockPrefab, grid.CellToWorld(pos), Quaternion.identity, transform).GetComponent<Block>();
+            return block;
+        }
+        Debug.Log("Failed to create block");
+        return null;
+        
     }
     public Block GetBlock(Vector3Int pos)
     {
@@ -193,5 +199,9 @@ public class LevelController : MonoBehaviour
     public bool InBounds(Vector3Int pos)
     {
         return (pos.x >= 0) && (pos.y >= bottomRow) && (pos.x < levelWidth) && (pos.y < topRow);
+    }
+    public Vector3 CenterOfBlock(Vector3Int gridPos)
+    {
+        return grid.CellToWorld(gridPos) + grid.cellSize/2;
     }
 }

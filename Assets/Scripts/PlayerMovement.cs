@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
+        transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }
     
     public bool Move(Vector3Int dir)
@@ -29,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
             if (LevelController.instance.GetBlock(gridPos).IsOpen(dir) && LevelController.instance.GetBlock(gridPos + dir).IsOpen(-dir))
             {
                 gridPos += dir;
-                transform.position = LevelController.instance.grid.GetCellCenterWorld(gridPos);
+                transform.position = LevelController.instance.CenterOfBlock(gridPos);
                 return true;
             }
         }
@@ -53,6 +54,6 @@ public class PlayerMovement : MonoBehaviour
         transform.parent = LevelController.instance.GetBlock(gridPos).transform;
         yield return new WaitForSeconds(LevelController.instance.shiftTime);
         transform.parent = LevelController.instance.transform;
-        transform.position = LevelController.instance.grid.GetCellCenterWorld(gridPos);
+        transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }
 }

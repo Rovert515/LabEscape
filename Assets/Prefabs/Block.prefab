@@ -246,7 +246,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallTile: {fileID: 11400000, guid: 5dc122fee89c8454483d8861fc5e4b92, type: 2}
-  keyPrefab: {fileID: 1412285994745015339, guid: 5756ef4e8f2c9c048b5cb736bc15c730, type: 3}
+  manaPrefab: {fileID: 1412285994745015339, guid: 5756ef4e8f2c9c048b5cb736bc15c730, type: 3}
+  gridPos: {x: 0, y: 0, z: 0}
 --- !u!212 &-8111250381086409100
 SpriteRenderer:
   m_ObjectHideFlags: 0

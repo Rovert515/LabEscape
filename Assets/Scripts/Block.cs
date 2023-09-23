@@ -7,9 +7,9 @@ using UnityEngine.Tilemaps;
 public class Block : MonoBehaviour
 {
     public Tile wallTile;
-    public GameObject keyPrefab;
-    public Vector3Int gridPos;
+    public GameObject manaPrefab;
 
+    public Vector3Int gridPos { get; private set; }
     public bool fading { get; private set; }
 
     private Grid grid;
@@ -29,10 +29,6 @@ public class Block : MonoBehaviour
     {
         Generate();
     }
-    private void Update()
-    {
-        
-    }
     public void Generate()
     {
         Vector3Int[] compass = { Vector3Int.right, Vector3Int.down, Vector3Int.up, Vector3Int.left };
@@ -45,7 +41,7 @@ public class Block : MonoBehaviour
         }
         if (Random.Range(0f, 1f) <= LevelController.instance.manaChance)
         {
-            Instantiate(keyPrefab, grid.CellToWorld(new Vector3Int(1, 1)) + grid.cellSize / 2, Quaternion.identity, transform);
+            Instantiate(manaPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
         }
     }
     public void Shift(Vector3Int shift)
