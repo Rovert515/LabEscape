@@ -32,12 +32,12 @@ public class Block : MonoBehaviour
         Vector3Int[] compass = { Vector3Int.right, Vector3Int.down, Vector3Int.up, Vector3Int.left };
         foreach (Vector3Int dir in compass)
         {
-            if (Random.Range(0f, 1f) < LevelController.instance.density)
+            if (Random.Range(0f, 1f) < GameManager.instance.settings.density)
             {
                 tilemap.SetTile(new Vector3Int(1, 1) + dir, wallTile);
             }
         }
-        if (Random.Range(0f, 1f) <= LevelController.instance.manaChance)
+        if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance)
         {
             Instantiate(manaPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
         }
@@ -54,9 +54,9 @@ public class Block : MonoBehaviour
         float startTime = Time.time;
         Vector3 targetPos = LevelController.instance.grid.CellToWorld(gridPos);
         Vector3 startPos = transform.position;
-        while (Time.time < startTime + LevelController.instance.shiftTime)
+        while (Time.time < startTime + GameManager.instance.settings.shiftTime)
         {
-            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / LevelController.instance.shiftTime);
+            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / GameManager.instance.settings.shiftTime);
             yield return null;
         }
         transform.position = targetPos;
@@ -70,7 +70,7 @@ public class Block : MonoBehaviour
     }
     IEnumerator FadeRoutine()
     {
-        yield return new WaitForSeconds(LevelController.instance.shiftTime);
+        yield return new WaitForSeconds(GameManager.instance.settings.shiftTime);
         Destroy(gameObject);
     }
 

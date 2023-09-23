@@ -8,9 +8,10 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance { get; private set; }
+
     public Lava lava;
 
-    public int manaCount;
+    public int manaCount { get; private set; }
 
     // Vars to store information about the last input
     private float lastInputTime;
@@ -21,6 +22,12 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        manaCount = GameManager.instance.settings.startingMana;
+    }
+    private void Start()
+    {
+        ConsumeMana();
     }
     private void Update()
     {
@@ -55,7 +62,7 @@ public class PlayerController : MonoBehaviour
             lastInputTime = Time.time;
         }
         // Otherwise, if the player inputed recently, use that input
-        else if ((!lastInputDuringShift && Time.time < lastInputTime + PlayerMovement.instance.moveTime/2) || (lastInputDuringShift && Time.time < lastInputTime + LevelController.instance.shiftTime/2))
+        else if ((!lastInputDuringShift && Time.time < lastInputTime + GameManager.instance.settings.moveTime/2) || (lastInputDuringShift && Time.time < lastInputTime + GameManager.instance.settings.shiftTime/2))
         {
             inputDir = lastInputDir;
             inputShift = lastInputShift;
@@ -98,7 +105,7 @@ public class PlayerController : MonoBehaviour
         Mana mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Mana>();
         if (mana != null)
         {
-            manaCount += mana.value;
+            manaCount += GameManager.instance.settings.manaValue;
             UIManager.instance.UpdateUI();
             Destroy(mana.gameObject);
             return true;

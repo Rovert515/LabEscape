@@ -12,10 +12,7 @@ public class LevelController : MonoBehaviour
     public static LevelController instance { get; private set; }
 
     public GameObject blockPrefab;
-    public int levelWidth;
-    public float density;
     public float manaChance;
-    public float shiftTime; // How long a shift takes
     
     public bool shifting { get; private set; } // Whether or not there are any blocks currently shifting
     public Grid grid { get; private set; }
@@ -33,23 +30,18 @@ public class LevelController : MonoBehaviour
         topRow = 0;
         bottomRow = 0;
     }
+    private void Start()
+    {
+        UpdateRows();
+    }
     private void Update()
     {
-        // Add and remove rows when needed based on carmera position
-        while (Camera.main.ViewportToWorldPoint(Vector3.up).y > grid.CellToWorld(new Vector3Int(0, topRow)).y)
-        {
-            AddRow();
-        }
-        while (Camera.main.ViewportToWorldPoint(Vector3.zero).y > grid.CellToWorld(new Vector3Int(0, bottomRow + 1)).y)
-        {
-            RemoveRow();
-        }
+        UpdateRows();
     }
-
     // Add/remove row from top/bottom of level, update topRow/bottomRow
     private void AddRow()
     {
-        for (int x = 0; x < levelWidth; x++)
+        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
         {
             Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(x, topRow)), Quaternion.identity, transform);
         }
@@ -57,7 +49,7 @@ public class LevelController : MonoBehaviour
     }
     private void RemoveRow()
     {
-        for (int x = 0; x < levelWidth; x++)
+        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
         {
             Block block = GetBlock(new Vector3Int(x, bottomRow));
             if (block != null)
@@ -67,6 +59,19 @@ public class LevelController : MonoBehaviour
         }
         bottomRow++;
         UIManager.instance.UpdateUI();
+    }
+
+    // Add and remove rows when needed based on carmera position
+    private void UpdateRows()
+    {
+        while (Camera.main.ViewportToWorldPoint(Vector3.up).y > grid.CellToWorld(new Vector3Int(0, topRow)).y)
+        {
+            AddRow();
+        }
+        while (Camera.main.ViewportToWorldPoint(Vector3.zero).y > grid.CellToWorld(new Vector3Int(0, bottomRow + 1)).y)
+        {
+            RemoveRow();
+        }
     }
 
     // Make a new block at gridPos
@@ -116,7 +121,7 @@ public class LevelController : MonoBehaviour
     private List<Block> GetRow(int n)
     {
         List<Block> row = new List<Block>();
-        for (int x = 0; x < levelWidth; x++)
+        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
         {
             Block block = GetBlock(new Vector3Int(x, n));
             if (block != null)
@@ -170,7 +175,7 @@ public class LevelController : MonoBehaviour
             }
             else
             {
-                addedBlock = CreateBlock(new Vector3Int(levelWidth, n));
+                addedBlock = CreateBlock(new Vector3Int(GameManager.instance.settings.levelWidth, n));
             }
             List<Block> row = GetRow(n);
             row.Add(addedBlock);
@@ -205,14 +210,14 @@ public class LevelController : MonoBehaviour
     IEnumerator ShiftRoutine()
     {
         shifting = true;
-        yield return new WaitForSeconds(shiftTime);
+        yield return new WaitForSeconds(GameManager.instance.settings.shiftTime);
         shifting = false;
     }
 
     // Whether or not a gridPos is inside the bounds of the current level
     public bool InBounds(Vector3Int gridPos)
     {
-        return (gridPos.x >= 0) && (gridPos.y >= bottomRow) && (gridPos.x < levelWidth) && (gridPos.y < topRow);
+        return (gridPos.x >= 0) && (gridPos.y >= bottomRow) && (gridPos.x < GameManager.instance.settings.levelWidth) && (gridPos.y < topRow);
     }
 
     // The center of the block at gridPos in world space

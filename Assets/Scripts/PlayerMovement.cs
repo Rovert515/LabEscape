@@ -7,8 +7,6 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance { get; private set; }
 
-    public float moveTime; // how long it takes the player to move
-
     public bool moving { get; private set; } // if the player is currently moving
     public Vector3Int gridPos { get; private set; }
 
@@ -46,9 +44,9 @@ public class PlayerMovement : MonoBehaviour
         float startTime = Time.time;
         Vector3 targetPos = LevelController.instance.CenterOfBlock(gridPos);
         Vector3 startPos = transform.position;
-        while (Time.time < startTime + moveTime)
+        while (Time.time < startTime + GameManager.instance.settings.moveTime)
         {
-            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / moveTime);
+            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / GameManager.instance.settings.moveTime);
             yield return null;
         }
         transform.position = targetPos;
@@ -75,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator RideWithBlock()
     {
         transform.parent = LevelController.instance.GetBlock(gridPos).transform;
-        yield return new WaitForSeconds(LevelController.instance.shiftTime);
+        yield return new WaitForSeconds(GameManager.instance.settings.shiftTime);
         transform.parent = LevelController.instance.transform;
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }

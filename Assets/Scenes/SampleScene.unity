@@ -2924,7 +2924,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b87494a9486e64cad09f8f043ca8a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
 --- !u!212 &1715441009
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3052,10 +3051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 8562496135023213370, guid: 5f4dbc4c8ed867e40ac024c9463eca85, type: 3}
-  levelWidth: 7
-  density: 0.35
   manaChance: 0.1
-  shiftTime: 0.2
 --- !u!1 &1930398813
 GameObject:
   m_ObjectHideFlags: 0
@@ -3067,8 +3063,9 @@ GameObject:
   - component: {fileID: 1930398815}
   - component: {fileID: 1930398814}
   - component: {fileID: 1930398816}
+  - component: {fileID: 1930398817}
   m_Layer: 5
-  m_Name: UI
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3117,6 +3114,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a6d50e8ecad52408f118f95a99f07e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1930398817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930398813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69266f7fdac536940bcfafd0fd59d8fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settingsPreset: 3
 --- !u!212 &2186868200063409185
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3216,7 +3226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859da33b13b2a8544a44f9272bbc9c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.2
 --- !u!114 &8879015041580133825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3230,7 +3239,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lava: {fileID: 1715441008}
-  manaCount: 5
 --- !u!58 &8879015041580133826
 CircleCollider2D:
   m_ObjectHideFlags: 0
