@@ -247,7 +247,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallTile: {fileID: 11400000, guid: 5dc122fee89c8454483d8861fc5e4b92, type: 2}
   manaPrefab: {fileID: 1412285994745015339, guid: 5756ef4e8f2c9c048b5cb736bc15c730, type: 3}
-  gridPos: {x: 0, y: 0, z: 0}
 --- !u!212 &-8111250381086409100
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -288,7 +287,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: f5554aecff5504042ad33e5de8f080b3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

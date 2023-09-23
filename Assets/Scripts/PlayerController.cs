@@ -10,7 +10,13 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance { get; private set; }
     public Lava lava;
 
-    public int manaCount = 5;
+    public int manaCount;
+
+    // Vars to store information about the last input
+    private float lastInputTime;
+    private Vector3Int lastInputDir;
+    private bool lastInputShift;
+    private bool lastInputDuringShift;
 
     private void Awake()
     {
@@ -37,10 +43,28 @@ public class PlayerController : MonoBehaviour
             inputDir = Vector3Int.down;
         }
 
-        // Attempt to either move or shift based on input
+        // Determine shift input
+        bool inputShift = Input.GetButton("Shift");
+
+        // If there is input, remember it
         if (inputDir != Vector3Int.zero)
         {
-            if (Input.GetButton("Shift"))
+            lastInputDir = inputDir;
+            lastInputDuringShift = LevelController.instance.shifting;
+            lastInputShift = inputShift;
+            lastInputTime = Time.time;
+        }
+        // Otherwise, if the player inputed recently, use that input
+        else if ((!lastInputDuringShift && Time.time < lastInputTime + PlayerMovement.instance.moveTime/2) || (lastInputDuringShift && Time.time < lastInputTime + LevelController.instance.shiftTime/2))
+        {
+            inputDir = lastInputDir;
+            inputShift = lastInputShift;
+        }
+
+        // If there is input, attempt to either move or shift
+        if (inputDir != Vector3Int.zero)
+        {
+            if (inputShift)
             {
                 // Attempt to shift if player has enough mana
                 if (manaCount > 0)
@@ -56,17 +80,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 // Attempt to move
-                if (PlayerMovement.instance.Move(inputDir))
-                {
-                    // Attempt to collect mana
-                    Mana mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Mana>();
-                    if (mana != null)
-                    {
-                        manaCount += mana.value;
-                        UIManager.instance.UpdateUI();
-                        mana.Fade();
-                    }
-                }
+                PlayerMovement.instance.Move(inputDir);
             }
         }
 
@@ -75,5 +89,20 @@ public class PlayerController : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+    }
+
+    // Consume a mana if there is one at gridPos
+    // Called by PlayerMovement when the player ends a movement
+    public bool ConsumeMana()
+    {
+        Mana mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Mana>();
+        if (mana != null)
+        {
+            manaCount += mana.value;
+            UIManager.instance.UpdateUI();
+            Destroy(mana.gameObject);
+            return true;
+        }
+        return false;
     }
 }

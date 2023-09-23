@@ -10,11 +10,10 @@ public class Block : MonoBehaviour
     public GameObject manaPrefab;
 
     public Vector3Int gridPos { get; private set; }
-    public bool fading { get; private set; }
+    public bool fading { get; private set; } // Whether or not the block is in the process of being deleted
 
     private Grid grid;
     private Tilemap tilemap;
-
 
     private void Awake()
     {
@@ -26,6 +25,8 @@ public class Block : MonoBehaviour
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         Generate();
     }
+
+    // Randomly fill in the 4 side walls and create mana pickup
     public void Generate()
     {
         Vector3Int[] compass = { Vector3Int.right, Vector3Int.down, Vector3Int.up, Vector3Int.left };
@@ -41,10 +42,11 @@ public class Block : MonoBehaviour
             Instantiate(manaPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
         }
     }
+
+    // Slide the block at a constant speed to gridPos + shift
     public void Shift(Vector3Int shift)
     {
         gridPos += shift;
-        StopCoroutine(ShiftRoutine());
         StartCoroutine(ShiftRoutine());
     }
     IEnumerator ShiftRoutine()
@@ -59,6 +61,8 @@ public class Block : MonoBehaviour
         }
         transform.position = targetPos;
     }
+
+    // Destroy the block once it finishes shifting
     public void Fade()
     {
         fading = true;
@@ -69,6 +73,8 @@ public class Block : MonoBehaviour
         yield return new WaitForSeconds(LevelController.instance.shiftTime);
         Destroy(gameObject);
     }
+
+    // Returns true if there is not wall on the side if this block in direction dir
     public bool IsOpen(Vector3Int dir)
     {
         return !tilemap.HasTile(new Vector3Int(1, 1) + dir);

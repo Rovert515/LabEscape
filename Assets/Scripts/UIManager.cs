@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
         VisualElement root = GetComponent<UIDocument>().rootVisualElement;
         manaLabel = root.Q<Label>("Mana");
         heightLabel = root.Q<Label>("Height");
@@ -21,6 +22,8 @@ public class UIManager : MonoBehaviour
     {
         UpdateUI();
     }
+
+    // Updates the UI to reflect current game state
     public void UpdateUI()
     {
         manaLabel.text = "Mana: " + PlayerController.instance.manaCount;

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
+// Manages all of the blocks in the level and directs their creation, movement, and destruction
 public class LevelController : MonoBehaviour
 {
     public static LevelController instance { get; private set; }
@@ -14,17 +15,13 @@ public class LevelController : MonoBehaviour
     public int levelWidth;
     public float density;
     public float manaChance;
-    public float shiftTime;
-
-    // Whether or not there are any blocks currently shifting
-    public bool shifting { get; private set; }
+    public float shiftTime; // How long a shift takes
+    
+    public bool shifting { get; private set; } // Whether or not there are any blocks currently shifting
     public Grid grid { get; private set; }
-    // Horizontal and vertical distance between the centers of cells
-    public Vector3 cellShift { get; private set; }
-    // Row above the current highest row (exclusive)
-    public int topRow { get; private set; }
-    // The current lowest row (inclusive)
-    public int bottomRow { get; private set; }
+    public Vector3 cellShift { get; private set; } // Horizontal and vertical distance between the centers of cells
+    public int topRow { get; private set; } // Row above the current highest row (exclusive)
+    public int bottomRow { get; private set; } // The current lowest row (inclusive)
 
     private void Awake()
     {
@@ -48,6 +45,8 @@ public class LevelController : MonoBehaviour
             RemoveRow();
         }
     }
+
+    // Add/remove row from top/bottom of level, update topRow/bottomRow
     private void AddRow()
     {
         for (int x = 0; x < levelWidth; x++)
@@ -69,6 +68,8 @@ public class LevelController : MonoBehaviour
         bottomRow++;
         UIManager.instance.UpdateUI();
     }
+
+    // Make a new block at gridPos
     private Block CreateBlock(Vector3Int gridPos)
     {
         if (GetBlock(gridPos) == null)
@@ -80,6 +81,8 @@ public class LevelController : MonoBehaviour
         return null;
         
     }
+
+    // Get a reference to the block at gridPos
     public Block GetBlock(Vector3Int gridPos)
     {
         foreach (Transform child in transform)
@@ -95,6 +98,8 @@ public class LevelController : MonoBehaviour
         }
         return null;
     }
+
+    // Get a list of all of the blocks in the nth column/row
     private List<Block> GetColumn(int n)
     {
         List<Block> column = new List<Block>();
@@ -121,7 +126,9 @@ public class LevelController : MonoBehaviour
         }
         return row;
     }
-    // shift argument should be either 1 or -1
+
+    // Shifts the nth column/row by shift, which should be either 1 or -1
+    // Returns whether or not the shift was successful
     public bool ShiftColumn(int n, int shift)
     {
         if (!shifting)
@@ -151,7 +158,6 @@ public class LevelController : MonoBehaviour
         return false;
         
     }
-    // shift argument should be either 1 or -1
     public bool ShiftRow(int n, int shift)
     {
         if (!shifting)
@@ -180,6 +186,8 @@ public class LevelController : MonoBehaviour
         }
         return false;
     }
+
+    // Shifts the column/row that origin is in the direction dir
     public bool ShiftFrom(Vector3Int origin, Vector3Int dir)
     {
         if (dir.x == 0)
@@ -192,19 +200,24 @@ public class LevelController : MonoBehaviour
         }
         return false;
     }
-    public bool InBounds(Vector3Int gridPos)
-    {
-        return (gridPos.x >= 0) && (gridPos.y >= bottomRow) && (gridPos.x < levelWidth) && (gridPos.y < topRow);
-    }
-    public Vector3 CenterOfBlock(Vector3Int gridPos)
-    {
-        return grid.CellToWorld(gridPos) + grid.cellSize/2;
-    }
+
     // Updates shifting variable
     IEnumerator ShiftRoutine()
     {
         shifting = true;
         yield return new WaitForSeconds(shiftTime);
         shifting = false;
+    }
+
+    // Whether or not a gridPos is inside the bounds of the current level
+    public bool InBounds(Vector3Int gridPos)
+    {
+        return (gridPos.x >= 0) && (gridPos.y >= bottomRow) && (gridPos.x < levelWidth) && (gridPos.y < topRow);
+    }
+
+    // The center of the block at gridPos in world space
+    public Vector3 CenterOfBlock(Vector3Int gridPos)
+    {
+        return grid.CellToWorld(gridPos) + grid.cellSize/2;
     }
 }

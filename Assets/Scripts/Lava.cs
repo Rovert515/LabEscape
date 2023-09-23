@@ -9,19 +9,15 @@ public class Lava : MonoBehaviour
 
     public float height { get; private set; }
 
-    private CameraMovement cam;
-
     private void Awake()
     {
-        cam = Camera.main.GetComponent<CameraMovement>();
-        
         height = -10;
         UpdatePos();
     }
     private void Update()
     {
-
-        if (height > cam.bottomOfScreen)
+        // Lave moves 3x faster if it is offscreen
+        if (height > Camera.main.transform.position.y - Camera.main.orthographicSize)
         {
             height += speed * Time.deltaTime;
         }
@@ -29,9 +25,10 @@ public class Lava : MonoBehaviour
         {
             height += 3 * speed * Time.deltaTime;
         }
-        
         UpdatePos();
     }
+
+    // Set transform.position to reflect height
     private void UpdatePos()
     {
         Vector3 newPos = transform.position;

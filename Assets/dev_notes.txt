@@ -1,0 +1,13 @@
+Sorting layers
+
+0: Block Tilemap
+1: Block Border
+2: Player + Mana
+3: Lava
+4: Level border
+
+To do
+
+- Horizontal wrapping
+- Difficulty settings
+- Make game manager

@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Handles the player's movement and shifting ability
 public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance { get; private set; }
 
-    public float moveTime;
+    public float moveTime; // how long it takes the player to move
 
-    public bool moving { get; private set; }
+    public bool moving { get; private set; } // if the player is currently moving
     public Vector3Int gridPos { get; private set; }
 
     private void Awake()
@@ -22,10 +23,11 @@ public class PlayerMovement : MonoBehaviour
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }
-    
+
+    // Attempt to move in the direction dir, return successfulness
     public bool Move(Vector3Int dir)
     {
-        if (LevelController.instance.InBounds(gridPos + dir) && !moving)
+        if (LevelController.instance.InBounds(gridPos + dir) && !moving && !LevelController.instance.shifting)
         {
             if (LevelController.instance.GetBlock(gridPos).IsOpen(dir) && LevelController.instance.GetBlock(gridPos + dir).IsOpen(-dir))
             {
@@ -36,26 +38,8 @@ public class PlayerMovement : MonoBehaviour
         }
         return false;
     }
-    public bool Shift(Vector3Int dir)
-    {
-        if (LevelController.instance.InBounds(gridPos + dir))
-        {
-            if (LevelController.instance.ShiftFrom(gridPos, dir))
-            {
-                StartCoroutine(RideWithBlock());
-                gridPos += dir;
-                return true;
-            }
-        }
-        return false;
-    }
-    IEnumerator RideWithBlock()
-    {
-        transform.parent = LevelController.instance.GetBlock(gridPos).transform;
-        yield return new WaitForSeconds(LevelController.instance.shiftTime);
-        transform.parent = LevelController.instance.transform;
-        transform.position = LevelController.instance.CenterOfBlock(gridPos);
-    }
+
+    // Move transform.position to gridPos at a constant speed in moveTime seconds
     IEnumerator MoveRoutine()
     {
         moving = true;
@@ -68,6 +52,32 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
         transform.position = targetPos;
+        PlayerController.instance.ConsumeMana();
         moving = false;
     }
+
+    // Attemt to shift the level centered at the player, return successfulness
+    public bool Shift(Vector3Int dir)
+    {
+        if (LevelController.instance.InBounds(gridPos + dir) && !moving)
+        {
+            if (LevelController.instance.ShiftFrom(gridPos, dir))
+            {
+                StartCoroutine(RideWithBlock());
+                gridPos += dir;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Temporarily set the parent of the player to the block they are standing in so that they shift along with the block
+    IEnumerator RideWithBlock()
+    {
+        transform.parent = LevelController.instance.GetBlock(gridPos).transform;
+        yield return new WaitForSeconds(LevelController.instance.shiftTime);
+        transform.parent = LevelController.instance.transform;
+        transform.position = LevelController.instance.CenterOfBlock(gridPos);
+    }
+    
 }
