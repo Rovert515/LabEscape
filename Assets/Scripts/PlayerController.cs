@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Handles the input and manages the player's resources
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance { get; private set; }
@@ -17,41 +18,47 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (!PlayerMovement.instance.moving && !LevelController.instance.shifting)
+        // Determine directional input
+        Vector3Int inputDir = Vector3Int.zero;
+        if (Input.GetButtonDown("Right"))
         {
-            Vector3Int inputDir = Vector3Int.zero;
-            if (Input.GetButtonDown("Right"))
+            inputDir = Vector3Int.right;
+        }
+        else if (Input.GetButtonDown("Left"))
+        {
+            inputDir = Vector3Int.left;
+        }
+        else if (Input.GetButtonDown("Up"))
+        {
+            inputDir = Vector3Int.up;
+        }
+        else if (Input.GetButtonDown("Down"))
+        {
+            inputDir = Vector3Int.down;
+        }
+
+        // Attempt to either move or shift based on input
+        if (inputDir != Vector3Int.zero)
+        {
+            if (Input.GetButton("Shift"))
             {
-                inputDir = Vector3Int.right;
-            }
-            else if (Input.GetButtonDown("Left"))
-            {
-                inputDir = Vector3Int.left;
-            }
-            else if (Input.GetButtonDown("Up"))
-            {
-                inputDir = Vector3Int.up;
-            }
-            else if (Input.GetButtonDown("Down"))
-            {
-                inputDir = Vector3Int.down;
-            }
-            if (inputDir != Vector3Int.zero)
-            {
-                if (Input.GetButton("Shift"))
+                // Attempt to shift if player has enough mana
+                if (manaCount > 0)
                 {
-                    if (manaCount > 0)
+                    // If successful, consume a mana
+                    if (PlayerMovement.instance.Shift(inputDir))
                     {
-                        if (PlayerMovement.instance.Shift(inputDir))
-                        {
-                            manaCount--;
-                            UIManager.instance.UpdateUI();
-                        }
+                        manaCount--;
+                        UIManager.instance.UpdateUI();
                     }
                 }
-                else
+            }
+            else
+            {
+                // Attempt to move
+                if (PlayerMovement.instance.Move(inputDir))
                 {
-                    PlayerMovement.instance.Move(inputDir);
+                    // Attempt to collect mana
                     Mana mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Mana>();
                     if (mana != null)
                     {
@@ -62,6 +69,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        // Restart scene if player goes below the height of the lava
         if (transform.position.y < lava.height)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

@@ -16,13 +16,15 @@ public class LevelController : MonoBehaviour
     public float manaChance;
     public float shiftTime;
 
+    // Whether or not there are any blocks currently shifting
     public bool shifting { get; private set; }
     public Grid grid { get; private set; }
+    // Horizontal and vertical distance between the centers of cells
     public Vector3 cellShift { get; private set; }
+    // Row above the current highest row (exclusive)
     public int topRow { get; private set; }
+    // The current lowest row (inclusive)
     public int bottomRow { get; private set; }
-
-    private float lastShiftTime;
 
     private void Awake()
     {
@@ -30,21 +32,13 @@ public class LevelController : MonoBehaviour
 
         grid = GetComponent<Grid>();
         cellShift = grid.cellSize + grid.cellGap;
-        lastShiftTime = -shiftTime;
         shifting = false;
         topRow = 0;
         bottomRow = 0;
     }
     private void Update()
     {
-        if (Time.time > lastShiftTime + shiftTime)
-        {
-            shifting = false;
-        }
-        else
-        {
-            shifting = true;
-        }
+        // Add and remove rows when needed based on carmera position
         while (Camera.main.ViewportToWorldPoint(Vector3.up).y > grid.CellToWorld(new Vector3Int(0, topRow)).y)
         {
             AddRow();
@@ -75,25 +69,25 @@ public class LevelController : MonoBehaviour
         bottomRow++;
         UIManager.instance.UpdateUI();
     }
-    private Block CreateBlock(Vector3Int pos)
+    private Block CreateBlock(Vector3Int gridPos)
     {
-        if (GetBlock(pos) == null)
+        if (GetBlock(gridPos) == null)
         {
-            Block block = Instantiate(blockPrefab, grid.CellToWorld(pos), Quaternion.identity, transform).GetComponent<Block>();
+            Block block = Instantiate(blockPrefab, grid.CellToWorld(gridPos), Quaternion.identity, transform).GetComponent<Block>();
             return block;
         }
         Debug.Log("Failed to create block");
         return null;
         
     }
-    public Block GetBlock(Vector3Int pos)
+    public Block GetBlock(Vector3Int gridPos)
     {
         foreach (Transform child in transform)
         {
             Block block = child.GetComponent<Block>();
             if (block != null)
             {
-                if (block.gridPos == pos && !block.fading)
+                if (block.gridPos == gridPos && !block.fading)
                 {
                     return block;
                 }
@@ -127,10 +121,12 @@ public class LevelController : MonoBehaviour
         }
         return row;
     }
+    // shift argument should be either 1 or -1
     public bool ShiftColumn(int n, int shift)
     {
         if (!shifting)
         {
+            StartCoroutine(ShiftRoutine());
             Block addedBlock = null;
             if (shift == 1)
             {
@@ -150,16 +146,17 @@ public class LevelController : MonoBehaviour
                     block.Fade();
                 }
             }
-            lastShiftTime = Time.time;
             return true;
         }
         return false;
         
     }
+    // shift argument should be either 1 or -1
     public bool ShiftRow(int n, int shift)
     {
         if (!shifting)
         {
+            StartCoroutine(ShiftRoutine());
             Block addedBlock = null;
             if (shift == 1)
             {
@@ -179,7 +176,6 @@ public class LevelController : MonoBehaviour
                     block.Fade();
                 }
             }
-            lastShiftTime = Time.time;
             return true;
         }
         return false;
@@ -196,12 +192,19 @@ public class LevelController : MonoBehaviour
         }
         return false;
     }
-    public bool InBounds(Vector3Int pos)
+    public bool InBounds(Vector3Int gridPos)
     {
-        return (pos.x >= 0) && (pos.y >= bottomRow) && (pos.x < levelWidth) && (pos.y < topRow);
+        return (gridPos.x >= 0) && (gridPos.y >= bottomRow) && (gridPos.x < levelWidth) && (gridPos.y < topRow);
     }
     public Vector3 CenterOfBlock(Vector3Int gridPos)
     {
         return grid.CellToWorld(gridPos) + grid.cellSize/2;
+    }
+    // Updates shifting variable
+    IEnumerator ShiftRoutine()
+    {
+        shifting = true;
+        yield return new WaitForSeconds(shiftTime);
+        shifting = false;
     }
 }

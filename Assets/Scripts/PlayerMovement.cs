@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     
     public bool Move(Vector3Int dir)
     {
-        if (LevelController.instance.InBounds(gridPos + dir))
+        if (LevelController.instance.InBounds(gridPos + dir) && !moving)
         {
             if (LevelController.instance.GetBlock(gridPos).IsOpen(dir) && LevelController.instance.GetBlock(gridPos + dir).IsOpen(-dir))
             {

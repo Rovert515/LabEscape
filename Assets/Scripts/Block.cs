@@ -24,9 +24,6 @@ public class Block : MonoBehaviour
         fading = false;
 
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
-    }
-    private void Start()
-    {
         Generate();
     }
     public void Generate()
