@@ -20,6 +20,9 @@ public class PlayerMovement : MonoBehaviour
     {
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
+
+        // Make sure the player can exit the starting block
+        LevelController.instance.GetBlock(gridPos).SetWall(Vector3Int.up, false);
     }
 
     // Attempt to move in the direction dir, return successfulness
@@ -27,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (LevelController.instance.InBounds(gridPos + dir) && !moving && !LevelController.instance.shifting)
         {
-            if (LevelController.instance.GetBlock(gridPos).IsOpen(dir) && LevelController.instance.GetBlock(gridPos + dir).IsOpen(-dir))
+            if (!LevelController.instance.GetBlock(gridPos).GetWall(dir) && !LevelController.instance.GetBlock(gridPos + dir).GetWall(-dir))
             {
                 gridPos += dir;
                 StartCoroutine(MoveRoutine());

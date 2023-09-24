@@ -26,6 +26,19 @@ public class Block : MonoBehaviour
         Generate();
     }
 
+    // Creates or removes a wall on this block
+    public void SetWall(Vector3Int dir, bool wall)
+    {
+        if (wall)
+        {
+            tilemap.SetTile(new Vector3Int(1, 1) + dir, wallTile);
+        }
+        else
+        {
+            tilemap.SetTile(new Vector3Int(1, 1) + dir, null);
+        }
+    }
+
     // Randomly fill in the 4 side walls and create mana pickup
     public void Generate()
     {
@@ -34,7 +47,7 @@ public class Block : MonoBehaviour
         {
             if (Random.Range(0f, 1f) < GameManager.instance.settings.density)
             {
-                tilemap.SetTile(new Vector3Int(1, 1) + dir, wallTile);
+                SetWall(dir, true);
             }
         }
         if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance)
@@ -75,8 +88,8 @@ public class Block : MonoBehaviour
     }
 
     // Returns true if there is not wall on the side if this block in direction dir
-    public bool IsOpen(Vector3Int dir)
+    public bool GetWall(Vector3Int dir)
     {
-        return !tilemap.HasTile(new Vector3Int(1, 1) + dir);
+        return tilemap.HasTile(new Vector3Int(1, 1) + dir);
     }
 }
