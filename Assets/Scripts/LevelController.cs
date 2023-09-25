@@ -30,64 +30,8 @@ public class LevelController : MonoBehaviour
         topRow = 0;
         bottomRow = 0;
     }
-    private void Start()
-    {
-        UpdateRows();
-    }
-    private void Update()
-    {
-        UpdateRows();
-    }
-    // Add/remove row from top/bottom of level, update topRow/bottomRow
-    private void AddRow()
-    {
-        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
-        {
-            Instantiate(blockPrefab, grid.CellToWorld(new Vector3Int(x, topRow)), Quaternion.identity, transform);
-        }
-        topRow++;
-    }
-    private void RemoveRow()
-    {
-        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
-        {
-            Block block = GetBlock(new Vector3Int(x, bottomRow));
-            if (block != null)
-            {
-                Destroy(block.gameObject);
-            }
-        }
-        bottomRow++;
-        UIManager.instance.UpdateUI();
-    }
 
-    // Add and remove rows when needed based on carmera position
-    private void UpdateRows()
-    {
-        while (Camera.main.ViewportToWorldPoint(Vector3.up).y > grid.CellToWorld(new Vector3Int(0, topRow)).y)
-        {
-            AddRow();
-        }
-        while (Camera.main.ViewportToWorldPoint(Vector3.zero).y > grid.CellToWorld(new Vector3Int(0, bottomRow + 1)).y)
-        {
-            RemoveRow();
-        }
-    }
-
-    // Make a new block at gridPos
-    private Block CreateBlock(Vector3Int gridPos)
-    {
-        if (GetBlock(gridPos) == null)
-        {
-            Block block = Instantiate(blockPrefab, grid.CellToWorld(gridPos), Quaternion.identity, transform).GetComponent<Block>();
-            return block;
-        }
-        Debug.Log("Failed to create block");
-        return null;
-        
-    }
-
-    // Get a reference to the block at gridPos
+    // Get, create, and destroy blocks
     public Block GetBlock(Vector3Int gridPos)
     {
         foreach (Transform child in transform)
@@ -101,7 +45,56 @@ public class LevelController : MonoBehaviour
                 }
             }
         }
+        Debug.LogWarning("Failed to find block at " + gridPos, transform);
         return null;
+    }
+    private Block CreateBlock(Vector3Int gridPos)
+    {
+        Block block = Instantiate(blockPrefab, grid.CellToWorld(gridPos), Quaternion.identity, transform).GetComponent<Block>();
+        return block;
+    }
+    private bool DestroyBlock(Vector3Int gridPos)
+    {
+        Block block = GetBlock(gridPos);
+        if (block != null)
+        {
+            Destroy(block.gameObject);
+            return true;
+        }
+        Debug.LogWarning("Attempted to destroy nonexistent block at " + gridPos, transform);
+        return false;
+    }
+
+    // Add/remove row from top/bottom of level, update topRow/bottomRow
+    private void AddRow()
+    {
+        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
+        {
+            CreateBlock(new Vector3Int(x, topRow));
+        }
+        topRow++;
+    }
+    private void RemoveRow()
+    {
+        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
+        {
+            DestroyBlock(new Vector3Int(x, bottomRow));
+        }
+        bottomRow++;
+        UIManager.instance.UpdateUI();
+    }
+
+    // Add and remove rows if needed based on carmera position
+    public void UpdateRows()
+    {
+        while (Camera.main.ViewportToWorldPoint(Vector3.up).y > grid.CellToWorld(new Vector3Int(0, topRow)).y)
+        {
+            AddRow();
+        }
+        while (Camera.main.ViewportToWorldPoint(Vector3.zero).y > grid.CellToWorld(new Vector3Int(0, bottomRow + 1)).y)
+        {
+            RemoveRow();
+        }
     }
 
     // Get a list of all of the blocks in the nth column/row
@@ -133,7 +126,6 @@ public class LevelController : MonoBehaviour
     }
 
     // Shifts the nth column/row by shift, which should be either 1 or -1
-    // Returns whether or not the shift was successful
     public bool ShiftColumn(int n, int shift)
     {
         if (!shifting)
@@ -144,9 +136,13 @@ public class LevelController : MonoBehaviour
             {
                 addedBlock = CreateBlock(new Vector3Int(n, bottomRow - 1));
             }
-            else
+            else if (shift == -1)
             {
                 addedBlock = CreateBlock(new Vector3Int(n, topRow));
+            }
+            else
+            {
+                Debug.LogWarning("ShiftColumn() called with invalid shift value", transform);
             }
             List<Block> column = GetColumn(n);
             column.Add(addedBlock);
@@ -173,9 +169,13 @@ public class LevelController : MonoBehaviour
             {
                 addedBlock = CreateBlock(new Vector3Int(-1, n));
             }
-            else
+            else if (shift == -1)
             {
                 addedBlock = CreateBlock(new Vector3Int(GameManager.instance.settings.levelWidth, n));
+            }
+            else
+            {
+                Debug.Log("ShiftColumn() called with invalid shift value");
             }
             List<Block> row = GetRow(n);
             row.Add(addedBlock);

@@ -53,6 +53,6 @@ public class GameSettings
         presets[SettingsPreset.medium] = new GameSettings(density: 0.35f, manaChance: 0.15f, lavaSpeed: 1.25f);
         presets[SettingsPreset.hard] = new GameSettings(density: 0.35f, manaChance: 0.1f, lavaSpeed: 2f);
         presets[SettingsPreset.puzzle] = new GameSettings(density: 0.4f, manaChance: 0.07f, lavaSpeed: 0f, manaValue: 1);
-        presets[SettingsPreset.blitz] = new GameSettings(density: 0.25f, manaChance: 0.15f, lavaSpeed: 5f, moveTime: 0.15f, shiftTime: 0.15f);
+        presets[SettingsPreset.blitz] = new GameSettings(density: 0.25f, manaChance: 0.1f, lavaSpeed: 5f, moveTime: 0.15f, shiftTime: 0.15f);
     }
 }

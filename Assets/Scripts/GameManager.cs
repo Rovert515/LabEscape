@@ -16,4 +16,12 @@ public class GameManager : MonoBehaviour
 
         settings = GameSettings.presets[settingsPreset];
     }
+    private void Start()
+    {
+        LevelController.instance.UpdateRows();
+    }
+    private void Update()
+    {
+        LevelController.instance.UpdateRows();
+    }
 }
