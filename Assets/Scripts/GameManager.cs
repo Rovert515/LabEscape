@@ -8,6 +8,10 @@ public class GameManager : MonoBehaviour
 
     public SettingsPreset settingsPreset;
 
+    private Lava lava;
+    private CameraMovement cam;
+    private Border border;
+
     public GameSettings settings { get; private set; }
 
     private void Awake()
@@ -15,10 +19,19 @@ public class GameManager : MonoBehaviour
         instance = this;
 
         settings = GameSettings.presets[settingsPreset];
+        lava = GetComponentInChildren<Lava>();
+        cam = GetComponentInChildren<CameraMovement>();
+        border = GetComponentInChildren<Border>();
     }
     private void Start()
     {
-        LevelController.instance.UpdateRows();
+        LevelController.instance.Initialize();
+        PlayerMovement.instance.Initialize();
+        PlayerController.instance.Initialize();
+        cam.Initialize();
+        lava.Initialize();
+        border.Initialize();
+        
     }
     private void Update()
     {

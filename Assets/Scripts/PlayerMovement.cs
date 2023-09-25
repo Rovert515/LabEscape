@@ -13,11 +13,11 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        moving = false;
     }
-    private void Start()
+    public void Initialize()
     {
+        moving = false;
+        transform.position = new Vector3(LevelController.instance.width/2, Camera.main.orthographicSize);
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
 

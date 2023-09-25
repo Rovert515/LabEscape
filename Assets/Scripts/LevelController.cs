@@ -19,16 +19,22 @@ public class LevelController : MonoBehaviour
     public Vector3 cellShift { get; private set; } // Horizontal and vertical distance between the centers of cells
     public int topRow { get; private set; } // Row above the current highest row (exclusive)
     public int bottomRow { get; private set; } // The current lowest row (inclusive)
+    public float width { get; private set; }
 
     private void Awake()
     {
         instance = this;
-
+    }
+    public void Initialize()
+    {
+        transform.localPosition = Vector3.zero;
         grid = GetComponent<Grid>();
         cellShift = grid.cellSize + grid.cellGap;
+        width = cellShift.x * GameManager.instance.settings.levelWidth;
         shifting = false;
         topRow = 0;
         bottomRow = 0;
+        UpdateRows();
     }
 
     // Get, create, and destroy blocks

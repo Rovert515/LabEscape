@@ -8,7 +8,7 @@ public enum SettingsPreset {
     medium,
     hard,
     puzzle,
-    blitz
+    blitz,
 }
 
 public class GameSettings
@@ -26,14 +26,14 @@ public class GameSettings
     public float lavaSpeedMultiplier;
 
     public GameSettings
-        (float density = 0.3f,
+        (float density = 0.35f,
         float manaChance = 0.15f,
         int manaValue = 1,
         int startingMana = 5,
         float moveTime = 0.2f,
         float shiftTime = 0.2f,
         int levelWidth = 7,
-        float lavaSpeed = 1f,
+        float lavaSpeed = 1.5f,
         float lavaSpeedMultiplier = 3f)
     {
         this.density = density;
@@ -49,10 +49,10 @@ public class GameSettings
 
     static GameSettings()
     {
-        presets[SettingsPreset.easy] = new GameSettings(density: 0.25f, manaChance: 0.2f, startingMana: 10, manaValue: 1);
-        presets[SettingsPreset.medium] = new GameSettings(density: 0.35f, manaChance: 0.15f, lavaSpeed: 1.25f);
+        presets[SettingsPreset.easy] = new GameSettings(density: 0.3f, manaChance: 0.15f, startingMana: 10);
+        presets[SettingsPreset.medium] = new GameSettings(density: 0.35f, manaChance: 0.15f, lavaSpeed: 1.5f);
         presets[SettingsPreset.hard] = new GameSettings(density: 0.35f, manaChance: 0.1f, lavaSpeed: 2f);
-        presets[SettingsPreset.puzzle] = new GameSettings(density: 0.4f, manaChance: 0.07f, lavaSpeed: 0f, manaValue: 1);
-        presets[SettingsPreset.blitz] = new GameSettings(density: 0.25f, manaChance: 0.1f, lavaSpeed: 5f, moveTime: 0.15f, shiftTime: 0.15f);
+        presets[SettingsPreset.puzzle] = new GameSettings(density: 0.4f, manaChance: 0.1f, lavaSpeed: 0f);
+        presets[SettingsPreset.blitz] = new GameSettings(density: 0.3f, manaChance: 0.1f, lavaSpeed: 5f, moveTime: 0.15f, shiftTime: 0.15f);
     }
 }

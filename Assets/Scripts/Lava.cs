@@ -7,9 +7,11 @@ public class Lava : MonoBehaviour
 {
     public float height { get; private set; }
 
-    private void Awake()
+    public void Initialize()
     {
         height = -10;
+        transform.localScale = new Vector3(LevelController.instance.width, Camera.main.orthographicSize * 2, 1);
+        transform.localPosition = new Vector3(LevelController.instance.width / 2, 0);
         UpdatePos();
     }
     private void Update()

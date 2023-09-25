@@ -22,11 +22,10 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        manaCount = GameManager.instance.settings.startingMana;
     }
-    private void Start()
+    public void Initialize()
     {
+        manaCount = GameManager.instance.settings.startingMana;
         ConsumeMana();
     }
     private void Update()
