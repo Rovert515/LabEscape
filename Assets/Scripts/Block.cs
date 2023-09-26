@@ -45,12 +45,12 @@ public class Block : MonoBehaviour
         Vector3Int[] compass = { Vector3Int.right, Vector3Int.down, Vector3Int.up, Vector3Int.left };
         foreach (Vector3Int dir in compass)
         {
-            if (Random.Range(0f, 1f) < GameManager.instance.settings.density)
+            if (Random.Range(0f, 1f) < GameManager.instance.settings.density.GetValue())
             {
                 SetWall(dir, true);
             }
         }
-        if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance)
+        if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance.GetValue())
         {
             Instantiate(manaPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
         }

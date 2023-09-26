@@ -19,11 +19,11 @@ public class Lava : MonoBehaviour
         // Lave moves 3x faster if it is offscreen
         if (height > Camera.main.transform.position.y - Camera.main.orthographicSize)
         {
-            height += GameManager.instance.settings.lavaSpeed * Time.deltaTime;
+            height += GameManager.instance.settings.lavaSpeed.GetValue() * Time.deltaTime;
         }
         else
         {
-            height += GameManager.instance.settings.lavaSpeedMultiplier * GameManager.instance.settings.lavaSpeed * Time.deltaTime;
+            height += GameManager.instance.settings.lavaSpeedMultiplier * GameManager.instance.settings.lavaSpeed.GetValue() * Time.deltaTime;
         }
         UpdatePos();
     }

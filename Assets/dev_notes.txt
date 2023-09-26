@@ -9,4 +9,5 @@ Sorting layers
 To do
 
 - Horizontal wrapping?
-- Add debuging logs to diagnose errors
+- Rotation?
+- Gas flow between blocks  
