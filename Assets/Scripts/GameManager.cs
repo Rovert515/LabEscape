@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
         cam.Initialize();
         lava.Initialize();
         border.Initialize();
+        UIManager.instance.UpdateUI();
         
     }
     private void Update()

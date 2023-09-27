@@ -6,19 +6,17 @@ using UnityEngine.Tilemaps;
 
 public class Block : MonoBehaviour
 {
-    public Tile wallTile;
     public GameObject manaPrefab;
 
     public Vector3Int gridPos { get; private set; }
     public bool fading { get; private set; } // Whether or not the block is in the process of being deleted
 
     private Grid grid;
-    private Tilemap tilemap;
+    private string roomCode;
 
     private void Awake()
     {
         grid = GetComponent<Grid>();
-        tilemap = GetComponentInChildren<Tilemap>();
 
         fading = false;
 
@@ -26,29 +24,34 @@ public class Block : MonoBehaviour
         Generate();
     }
 
-    // Creates or removes a wall on this block
-    public void SetWall(Vector3Int dir, bool wall)
-    {
-        if (wall)
-        {
-            tilemap.SetTile(new Vector3Int(1, 1) + dir, wallTile);
-        }
-        else
-        {
-            tilemap.SetTile(new Vector3Int(1, 1) + dir, null);
-        }
-    }
-
     // Randomly fill in the 4 side walls and create mana pickup
     public void Generate()
     {
-        Vector3Int[] compass = { Vector3Int.right, Vector3Int.down, Vector3Int.up, Vector3Int.left };
-        foreach (Vector3Int dir in compass)
+        roomCode = "";
+        for (int i = 0; i < 4; i++)
         {
             if (Random.Range(0f, 1f) < GameManager.instance.settings.density.GetValue())
             {
-                SetWall(dir, true);
+                roomCode += "1";
             }
+            else
+            {
+                roomCode += "0";
+            }
+        }
+        if (roomCode == "1111")
+        {
+            char[] codeArray = roomCode.ToCharArray();
+            codeArray[Random.Range(0, 4)] = '0';
+            roomCode = new string(codeArray);
+        }
+        GameObject tilemapPrefab = Resources.Load<GameObject>("Block Themes/Lab/room_" + roomCode);
+        if (tilemapPrefab == null) {
+            Debug.LogWarning("Failed to find tilemap prefab at Block Themes/Lab/room_" + roomCode, transform);
+        }
+        else
+        {
+            Instantiate(tilemapPrefab, transform);
         }
         if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance.GetValue())
         {
@@ -87,9 +90,10 @@ public class Block : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // Returns true if there is not wall on the side if this block in direction dir
+    // Returns true if there is a wall on the side of this block in direction dir
     public bool GetWall(Vector3Int dir)
     {
-        return tilemap.HasTile(new Vector3Int(1, 1) + dir);
+        Dictionary<Vector3Int, int> dirToIndex = new Dictionary<Vector3Int, int>() { { Vector3Int.right, 0 }, { Vector3Int.up, 1 }, { Vector3Int.left, 2 }, { Vector3Int.down, 3 } };
+        return roomCode[dirToIndex[dir]] == '1';
     }
 }

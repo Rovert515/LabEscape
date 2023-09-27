@@ -9,13 +9,14 @@ public class CameraMovement : MonoBehaviour
     private Vector3 desiredPos;
     private float cameraHeight;
     private float bottomOfLevel;
+    public float verticalOffset;
 
     public void Initialize()
     {
-        cameraHeight = LevelController.instance.width*0.7f;
+        cameraHeight = LevelController.instance.width*0.5f;
         Camera.main.orthographicSize = cameraHeight;
         bottomOfLevel = LevelController.instance.grid.CellToWorld(new Vector3Int(0, LevelController.instance.bottomRow)).y;
-        transform.localPosition = new Vector3(LevelController.instance.width/2, Mathf.Clamp(PlayerMovement.instance.transform.position.y, bottomOfLevel + cameraHeight, Mathf.Infinity), -10);
+        transform.localPosition = new Vector3(LevelController.instance.width/2, Mathf.Clamp(PlayerMovement.instance.transform.position.y + verticalOffset, bottomOfLevel + cameraHeight, Mathf.Infinity), -10);
         desiredPos = transform.position;
     }
     private void Update()
@@ -28,7 +29,7 @@ public class CameraMovement : MonoBehaviour
     private void UpdateDesiredPos()
     {
         bottomOfLevel = LevelController.instance.grid.CellToWorld(new Vector3Int(0, LevelController.instance.bottomRow)).y;
-        desiredPos.y = PlayerMovement.instance.transform.position.y;
+        desiredPos.y = PlayerMovement.instance.transform.position.y + verticalOffset;
         desiredPos.y = Mathf.Clamp(desiredPos.y, bottomOfLevel + cameraHeight, Mathf.Infinity);
     }
 }

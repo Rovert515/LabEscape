@@ -18,15 +18,11 @@ public class UIManager : MonoBehaviour
         manaLabel = root.Q<Label>("Mana");
         heightLabel = root.Q<Label>("Height");
     }
-    private void Start()
-    {
-        UpdateUI();
-    }
 
     // Updates the UI to reflect current game state
     public void UpdateUI()
     {
-        manaLabel.text = "Mana: " + PlayerController.instance.manaCount;
+        manaLabel.text = "Shifts: " + PlayerController.instance.manaCount;
         heightLabel.text = "Height: " + LevelController.instance.bottomRow;
     }
 }

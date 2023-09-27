@@ -20,9 +20,6 @@ public class PlayerMovement : MonoBehaviour
         transform.position = new Vector3(LevelController.instance.width/2, Camera.main.orthographicSize);
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
-
-        // Make sure the player can exit the starting block
-        LevelController.instance.GetBlock(gridPos).SetWall(Vector3Int.up, false);
     }
 
     // Attempt to move in the direction dir, return successfulness

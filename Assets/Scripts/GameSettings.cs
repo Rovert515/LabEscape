@@ -37,7 +37,7 @@ public class GameSettings
         int startingMana = 5,
         float moveTime = 0.2f,
         float shiftTime = 0.2f,
-        int levelWidth = 7,
+        int levelWidth = 6,
         float lavaSpeedMultiplier = 3f)
     {
         this.density = density;
