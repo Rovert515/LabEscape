@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="Main" style="flex-grow: 1; align-items: stretch; align-self: flex-start; flex-direction: column; height: 592px; width: 604px; max-width: initial; max-height: initial;">
-        <ui:Label tabindex="-1" text="Mana: X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Mana" style="font-size: 40%; color: rgb(255, 255, 255); -unity-font-style: bold; height: 75px; margin-top: 15px; margin-right: 15px; margin-bottom: 7px; margin-left: 15px; align-self: flex-start; align-items: auto;" />
+        <ui:Label tabindex="-1" text="Shifts: X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Mana" style="font-size: 40%; color: rgb(255, 255, 255); -unity-font-style: bold; height: 75px; margin-top: 15px; margin-right: 15px; margin-bottom: 7px; margin-left: 15px; align-self: flex-start; align-items: auto;" />
         <ui:Label tabindex="-1" text="Height: X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Height" style="font-size: 40%; color: rgb(255, 255, 255); -unity-font-style: bold; height: 75px; margin-top: 7px; margin-right: 15px; margin-bottom: 15px; margin-left: 15px; align-self: flex-start; flex-direction: column; align-items: auto;" />
     </ui:VisualElement>
 </ui:UXML>

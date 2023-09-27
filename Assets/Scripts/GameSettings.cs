@@ -35,9 +35,9 @@ public class GameSettings
         HeightBasedFloat lavaSpeed,
         int manaValue = 1,
         int startingMana = 5,
-        float moveTime = 0.2f,
-        float shiftTime = 0.2f,
-        int levelWidth = 6,
+        float moveTime = 0.25f,
+        float shiftTime = 0.25f,
+        int levelWidth = 5,
         float lavaSpeedMultiplier = 3f)
     {
         this.density = density;
