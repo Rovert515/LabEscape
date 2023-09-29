@@ -23,7 +23,7 @@ public class Border : MonoBehaviour
     {
         tilemap = GetComponent<Tilemap>();
         int levelHeight = LevelController.instance.topRow - LevelController.instance.bottomRow;
-        int levelWidth = GameManager.instance.settings.levelWidth;
+        int levelWidth = LevelController.instance.levelWidth;
         tilemap.ClearAllTiles();
         for (int x = -levelWidth; x < 0; x++)
         {

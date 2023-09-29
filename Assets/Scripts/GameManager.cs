@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public enum SceneID
 {
+    start,
     title,
     game
 }
@@ -27,8 +28,8 @@ public class GameManager : MonoBehaviour
     public event GameEvent gameUpdate;
 
     public SettingsPreset settingsPreset;
+    public SceneID currentScene;
 
-    private SceneID currentScene;
     private PlayState playState;
 
     public GameSettings settings { get; private set; }
@@ -39,25 +40,42 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        currentScene = SceneID.title;
+        currentScene = SceneID.start;
         playState = PlayState.playing;
+        settings = GameSettings.presets[settingsPreset];
+    }
+    private void Start()
+    {
+        SetScene(SceneID.title);
     }
     public void SetScene(SceneID sceneID)
     {
-        currentScene = sceneID;
+        AsyncOperation asyncLoad;
         switch (sceneID)
         {
             case SceneID.title:
-                SceneManager.LoadScene(0);
+                gameTime = 0;
+                asyncLoad = SceneManager.LoadSceneAsync(0);
+                asyncLoad.completed += operation =>
+                {
+                    currentScene = sceneID;
+                    LevelController.instance.levelWidth = 10;
+                    LevelController.instance.transform.position = Camera.main.ScreenToWorldPoint(Vector3.zero) + Vector3.forward * 10;
+                    if (initializeLevel != null)
+                    {
+                        initializeLevel();
+                    }
+                };
                 break;
             case SceneID.game:
-                settings = GameSettings.presets[settingsPreset];
                 gameTime = 0;
                 playState = PlayState.loading;
-                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
+                asyncLoad = SceneManager.LoadSceneAsync(1);
                 // Loading bar here???
                 asyncLoad.completed += operation =>
                 {
+                    currentScene = sceneID;
+                    LevelController.instance.levelWidth = settings.levelWidth;
                     if (initializeLevel != null)
                     {
                         initializeLevel();
@@ -76,6 +94,16 @@ public class GameManager : MonoBehaviour
         switch (currentScene)
         {
             case SceneID.title:
+                gameTime += Time.deltaTime;
+                if (gameUpdate != null)
+                {
+                    gameUpdate();
+                }
+                LevelController.instance.transform.position = Camera.main.ScreenToWorldPoint(Vector3.zero) + Vector3.forward * 10;
+                if (Random.Range(0f, 1f) < 0.01)
+                {
+                    LevelController.instance.RandomShift();
+                }
                 break;
             case SceneID.game:
                 switch (playState)
@@ -100,9 +128,5 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
-    }
-    public void PlayGame()
-    {
-        SetScene(SceneID.game);
     }
 }

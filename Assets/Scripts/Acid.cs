@@ -20,7 +20,7 @@ public class Acid : MonoBehaviour
     {
         height = -10;
         transform.localScale = new Vector3(LevelController.instance.width, 100, 1);
-        transform.localPosition = new Vector3(LevelController.instance.width / 2, 0);
+        transform.position = LevelController.instance.transform.position + Vector3.right * LevelController.instance.width / 2;
         UpdatePos();
     }
     private void GameUpdate()

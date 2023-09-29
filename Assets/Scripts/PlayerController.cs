@@ -89,7 +89,6 @@ public class PlayerController : MonoBehaviour
                     if (PlayerMovement.instance.Shift(inputDir))
                     {
                         keycardCount--;
-                        UIManager.instance.UpdateUI();
                     }
                 }
             }
@@ -115,7 +114,6 @@ public class PlayerController : MonoBehaviour
         if (mana != null)
         {
             keycardCount += GameManager.instance.settings.manaValue;
-            UIManager.instance.UpdateUI();
             Destroy(mana.gameObject);
             return true;
         }

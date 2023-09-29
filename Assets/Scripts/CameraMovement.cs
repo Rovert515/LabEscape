@@ -26,7 +26,7 @@ public class CameraMovement : MonoBehaviour
         cameraHeight = LevelController.instance.width*0.5f;
         Camera.main.orthographicSize = cameraHeight;
         bottomOfLevel = LevelController.instance.grid.CellToWorld(new Vector3Int(0, LevelController.instance.bottomRow)).y;
-        transform.localPosition = new Vector3(LevelController.instance.width/2, LevelController.instance.width / 2 + verticalOffset, -10);
+        transform.position = LevelController.instance.transform.position + new Vector3(1, 1) * LevelController.instance.width / 2 + Vector3.up * verticalOffset + Vector3.back * 10;
         desiredPos = transform.position;
     }
     private void GameUpdate()

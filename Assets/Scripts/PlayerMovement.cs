@@ -33,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     public void Initialize()
     {
         moving = false;
-        transform.position = new Vector3(LevelController.instance.width/2, LevelController.instance.width / 2);
+        transform.position = LevelController.instance.transform.position + new Vector3(1, 1) * LevelController.instance.width / 2;
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }

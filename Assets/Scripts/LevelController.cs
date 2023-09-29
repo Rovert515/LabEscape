@@ -12,7 +12,7 @@ public class LevelController : MonoBehaviour
     public static LevelController instance { get; private set; }
 
     public GameObject blockPrefab;
-    public float manaChance;
+    public int levelWidth;
     
     public Grid grid { get; private set; }
     public Vector3 cellShift { get; private set; } // Horizontal and vertical distance between the centers of cells
@@ -36,17 +36,17 @@ public class LevelController : MonoBehaviour
     }
     public void Initialize()
     {
-        transform.localPosition = Vector3.zero;
+        //transform.localPosition = Vector3.zero;
         grid = GetComponent<Grid>();
         cellShift = grid.cellSize + grid.cellGap;
-        width = cellShift.x * GameManager.instance.settings.levelWidth;
+        width = cellShift.x * levelWidth;
         topRow = 0;
         bottomRow = 0;
-        UpdateRows();
+        UpdateLevelBounds();
     }
     private void GameUpdate()
     {
-        UpdateRows();
+        UpdateLevelBounds();
     }
 
     // Get, create, and destroy blocks
@@ -63,7 +63,6 @@ public class LevelController : MonoBehaviour
                 }
             }
         }
-        Debug.LogWarning("Failed to find block at " + gridPos, transform);
         return null;
     }
     private Block CreateBlock(Vector3Int gridPos)
@@ -77,42 +76,51 @@ public class LevelController : MonoBehaviour
         Block block = GetBlock(gridPos);
         if (block != null)
         {
-            Destroy(block.gameObject);
-            return true;
+            if (!block.fading)
+            {
+                Destroy(block.gameObject);
+                return true;
+            }
         }
         Debug.LogWarning("Attempted to destroy nonexistent block at " + gridPos, transform);
         return false;
     }
 
-    // Add/remove row from top/bottom of level, update topRow/bottomRow
-    private void AddRow()
+    // Add or remove blocks so that the level has the proper bounds
+    public void UpdateLevelBounds()
     {
-        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
+        // update bounds variables
+        topRow = grid.WorldToCell(Camera.main.ViewportToWorldPoint(Vector3.up)).y + 1;
+        bottomRow = grid.WorldToCell(Camera.main.ViewportToWorldPoint(Vector3.zero)).y;
+        if (GameManager.instance.currentScene == SceneID.title)
         {
-            CreateBlock(new Vector3Int(x, topRow));
+            levelWidth = grid.WorldToCell(Camera.main.ViewportToWorldPoint(Vector3.right)).x + 1;
         }
-        topRow++;
-    }
-    private void RemoveRow()
-    {
-        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
-        {
-            DestroyBlock(new Vector3Int(x, bottomRow));
-        }
-        bottomRow++;
-        UIManager.instance.UpdateUI();
-    }
 
-    // Add and remove rows if needed based on carmera position
-    public void UpdateRows()
-    {
-        while (Camera.main.ViewportToWorldPoint(Vector3.up).y > grid.CellToWorld(new Vector3Int(0, topRow)).y)
+        // Remove all blocks which are out of bounds
+        foreach (Transform child in transform)
         {
-            AddRow();
+            Block block = child.GetComponent<Block>();
+            if (block != null)
+            {
+                if (!InBounds(block.gridPos) && !block.fading)
+                {
+;                   DestroyBlock(block.gridPos);
+                }
+            }
         }
-        while (Camera.main.ViewportToWorldPoint(Vector3.zero).y > grid.CellToWorld(new Vector3Int(0, bottomRow + 1)).y)
+
+        // Make sure bounds are filled with blocks
+        for (int x = 0; x < levelWidth; x++)
         {
-            RemoveRow();
+            for (int y = bottomRow; y < topRow; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y);
+                if (GetBlock(pos) == null)
+                {
+                    CreateBlock(pos);
+                }
+            }
         }
     }
 
@@ -133,7 +141,7 @@ public class LevelController : MonoBehaviour
     private List<Block> GetRow(int n)
     {
         List<Block> row = new List<Block>();
-        for (int x = 0; x < GameManager.instance.settings.levelWidth; x++)
+        for (int x = 0; x < levelWidth; x++)
         {
             Block block = GetBlock(new Vector3Int(x, n));
             if (block != null)
@@ -196,7 +204,7 @@ public class LevelController : MonoBehaviour
         }
         else if (shift == -1)
         {
-            addedBlock = CreateBlock(new Vector3Int(GameManager.instance.settings.levelWidth, n));
+            addedBlock = CreateBlock(new Vector3Int(levelWidth, n));
         }
         else
         {
@@ -228,10 +236,18 @@ public class LevelController : MonoBehaviour
         return false;
     }
 
+    public bool RandomShift()
+    {
+        Vector3Int[] compass = { Vector3Int.right, Vector3Int.left, Vector3Int.up, Vector3Int.down };
+        Vector3Int shift = compass[Random.Range(0, 4)];
+        Vector3Int shiftPos = new Vector3Int(Random.Range(0, levelWidth), Random.Range(bottomRow, topRow));
+        return ShiftFrom(shiftPos, shift);
+    }
+
     // Whether or not a gridPos is inside the bounds of the current level
     public bool InBounds(Vector3Int gridPos)
     {
-        return (gridPos.x >= 0) && (gridPos.y >= bottomRow) && (gridPos.x < GameManager.instance.settings.levelWidth) && (gridPos.y < topRow);
+        return (gridPos.x >= 0) && (gridPos.y >= bottomRow) && (gridPos.x < levelWidth) && (gridPos.y < topRow);
     }
 
     // The center of the block at gridPos in world space

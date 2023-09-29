@@ -45,9 +45,12 @@ public class Block : MonoBehaviour
             {
                 shifting = false;
                 transform.position = LevelController.instance.grid.CellToWorld(gridPos);
-                if (PlayerMovement.instance.gridPos == gridPos)
+                if (PlayerMovement.instance != null)
                 {
-                    PlayerMovement.instance.StopRiding();
+                    if (PlayerMovement.instance.gridPos == gridPos)
+                    {
+                        PlayerMovement.instance.StopRiding();
+                    }
                 }
                 if (fading)
                 {
@@ -111,9 +114,12 @@ public class Block : MonoBehaviour
             shifting = true;
             shiftStartTime = GameManager.instance.gameTime;
             shiftStartPos = transform.position;
-            if (PlayerMovement.instance.gridPos == gridPos)
+            if (PlayerMovement.instance != null)
             {
-                PlayerMovement.instance.StartRiding(shift);
+                if (PlayerMovement.instance.gridPos == gridPos)
+                {
+                    PlayerMovement.instance.StartRiding(shift);
+                }
             }
             gridPos += shift;
             return true;

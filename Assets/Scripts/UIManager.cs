@@ -21,10 +21,12 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         GameManager.instance.initializeOthers += UpdateUI;
+        GameManager.instance.gameUpdate += UpdateUI;
     }
     private void OnDisable()
     {
         GameManager.instance.initializeOthers -= UpdateUI;
+        GameManager.instance.gameUpdate -= UpdateUI;
     }
         // Updates the UI to reflect current game state
         public void UpdateUI()

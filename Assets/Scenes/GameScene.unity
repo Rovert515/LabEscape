@@ -608,7 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 8562496135023213370, guid: 5f4dbc4c8ed867e40ac024c9463eca85, type: 3}
-  manaChance: 0.1
+  levelWidth: 0
 --- !u!212 &2186868200063409185
 SpriteRenderer:
   m_ObjectHideFlags: 0
