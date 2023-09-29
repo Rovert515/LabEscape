@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
 
     public Acid lava;
 
-    public int manaCount { get; private set; }
+    public int keycardCount { get; private set; }
 
     // Vars to store information about the last input
     private float lastInputTime;
@@ -35,8 +35,8 @@ public class PlayerController : MonoBehaviour
     }
     public void Initialize()
     {
-        manaCount = GameManager.instance.settings.startingMana;
-        ConsumeMana();
+        keycardCount = GameManager.instance.settings.startingMana;
+        PickUp();
     }
     private void GameUpdate()
     {
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
         if (inputDir != Vector3Int.zero)
         {
             lastInputDir = inputDir;
-            lastInputDuringShift = LevelController.instance.shifting;
+            lastInputDuringShift = PlayerMovement.instance.riding;
             lastInputShift = inputShift;
             lastInputTime = Time.time;
         }
@@ -82,13 +82,13 @@ public class PlayerController : MonoBehaviour
         {
             if (inputShift)
             {
-                // Attempt to shift if player has enough mana
-                if (manaCount > 0)
+                // Attempt to shift if player has enough keycards
+                if (keycardCount > 0)
                 {
-                    // If successful, consume a mana
+                    // If successful, consume a keycard
                     if (PlayerMovement.instance.Shift(inputDir))
                     {
-                        manaCount--;
+                        keycardCount--;
                         UIManager.instance.UpdateUI();
                     }
                 }
@@ -109,12 +109,12 @@ public class PlayerController : MonoBehaviour
 
     // Consume a mana if there is one at gridPos
     // Called by PlayerMovement when the player ends a movement
-    public bool ConsumeMana()
+    public bool PickUp()
     {
         Keycard mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Keycard>();
         if (mana != null)
         {
-            manaCount += GameManager.instance.settings.manaValue;
+            keycardCount += GameManager.instance.settings.manaValue;
             UIManager.instance.UpdateUI();
             Destroy(mana.gameObject);
             return true;

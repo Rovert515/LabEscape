@@ -8,9 +8,12 @@ public class PlayerMovement : MonoBehaviour
     public static PlayerMovement instance { get; private set; }
 
     public bool moving { get; private set; } // if the player is currently moving
+    public bool riding { get; private set; }
     public Vector3Int gridPos { get; private set; }
 
     private Animator animator;
+    private float moveStartTime;
+    private Vector3 moveStartPos;
 
     private void Awake()
     {
@@ -20,12 +23,12 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         GameManager.instance.initializeOthers += Initialize;
-        //GameManager.instance.gameUpdate += GameUpdate;
+        GameManager.instance.gameUpdate += GameUpdate;
     }
     private void OnDisable()
     {
         GameManager.instance.initializeOthers -= Initialize;
-        //GameManager.instance.gameUpdate -= GameUpdate;
+        GameManager.instance.gameUpdate -= GameUpdate;
     }
     public void Initialize()
     {
@@ -34,39 +37,42 @@ public class PlayerMovement : MonoBehaviour
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }
+    private void GameUpdate()
+    {
+        if (moving)
+        {
+            if (GameManager.instance.gameTime >= moveStartTime + GameManager.instance.settings.moveTime)
+            {
+                moving = false;
+                animator.SetBool("moving", moving);
+                transform.position = LevelController.instance.CenterOfBlock(gridPos);
+                PlayerController.instance.PickUp();
+            }
+            else
+            {
+                // move towards gridPos
+                transform.position = Vector3.Lerp(moveStartPos, LevelController.instance.CenterOfBlock(gridPos), (GameManager.instance.gameTime - moveStartTime)/GameManager.instance.settings.moveTime);
+            }
+        }
+    }
 
     // Attempt to move in the direction dir, return successfulness
     public bool Move(Vector3Int dir)
     {
-        if (LevelController.instance.InBounds(gridPos + dir) && !moving && !LevelController.instance.shifting)
+        if (LevelController.instance.InBounds(gridPos + dir) && !moving && !LevelController.instance.GetBlock(gridPos).shifting)
         {
-            if (!LevelController.instance.GetBlock(gridPos).GetWall(dir) && !LevelController.instance.GetBlock(gridPos + dir).GetWall(-dir))
+            Block targetBlock = LevelController.instance.GetBlock(gridPos + dir);
+            if (!LevelController.instance.GetBlock(gridPos).GetWall(dir) && !targetBlock.GetWall(-dir) && !targetBlock.shifting)
             {
                 gridPos += dir;
-                StartCoroutine(MoveRoutine());
+                moving = true;
+                animator.SetBool("moving", moving);
+                moveStartTime = GameManager.instance.gameTime;
+                moveStartPos = transform.position;
                 return true;
             }
         }
         return false;
-    }
-
-    // Move transform.position to gridPos at a constant speed in moveTime seconds
-    IEnumerator MoveRoutine()
-    {
-        moving = true;
-        animator.SetBool("moving", moving);
-        float startTime = Time.time;
-        Vector3 targetPos = LevelController.instance.CenterOfBlock(gridPos);
-        Vector3 startPos = transform.position;
-        while (Time.time < startTime + GameManager.instance.settings.moveTime)
-        {
-            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / GameManager.instance.settings.moveTime);
-            yield return null;
-        }
-        transform.position = targetPos;
-        PlayerController.instance.ConsumeMana();
-        moving = false;
-        animator.SetBool("moving", moving);
     }
 
     // Attemt to shift the level centered at the player, return successfulness
@@ -76,21 +82,26 @@ public class PlayerMovement : MonoBehaviour
         {
             if (LevelController.instance.ShiftFrom(gridPos, dir))
             {
-                StartCoroutine(RideWithBlock());
-                gridPos += dir;
                 return true;
             }
         }
         return false;
     }
 
-    // Temporarily set the parent of the player to the block they are standing in so that they shift along with the block
-    IEnumerator RideWithBlock()
+    public void StartRiding(Vector3Int shift)
     {
-        transform.parent = LevelController.instance.GetBlock(gridPos).transform;
-        yield return new WaitForSeconds(GameManager.instance.settings.shiftTime);
+        if (!riding)
+        {
+            riding = true;
+            transform.parent = LevelController.instance.GetBlock(gridPos).transform;
+            gridPos += shift;
+        }
+    }
+    public void StopRiding()
+    {
+        riding = false;
         transform.parent = LevelController.instance.transform;
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }
-    
+
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -10,22 +11,59 @@ public class Block : MonoBehaviour
 
     public Vector3Int gridPos { get; private set; }
     public bool fading { get; private set; } // Whether or not the block is in the process of being deleted
+    public bool shifting { get; private set; }
 
     private Grid grid;
     private string roomCode;
+    
+    private float shiftStartTime;
+    private Vector3 shiftStartPos;
 
     private void Awake()
     {
         grid = GetComponent<Grid>();
-
         fading = false;
-
+        shifting = false;
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
-        Generate();
+    }
+    private void OnEnable()
+    {
+        //GameManager.instance.initializeLevel += Initialize;
+        GameManager.instance.gameUpdate += GameUpdate;
+    }
+    private void OnDisable()
+    {
+        //GameManager.instance.initializeLevel -= Initialize;
+        GameManager.instance.gameUpdate -= GameUpdate;
     }
 
-    // Randomly fill in the 4 side walls and create mana pickup
-    public void Generate()
+    private void GameUpdate()
+    {
+        if (shifting)
+        {
+            if (GameManager.instance.gameTime >= shiftStartTime + GameManager.instance.settings.shiftTime)
+            {
+                shifting = false;
+                transform.position = LevelController.instance.grid.CellToWorld(gridPos);
+                if (PlayerMovement.instance.gridPos == gridPos)
+                {
+                    PlayerMovement.instance.StopRiding();
+                }
+                if (fading)
+                {
+                    Destroy(gameObject);
+                }
+            }
+            else
+            {
+                // move towards gridPos
+                transform.position = Vector3.Lerp(shiftStartPos, LevelController.instance.grid.CellToWorld(gridPos), (GameManager.instance.gameTime - shiftStartTime) / GameManager.instance.settings.shiftTime);
+            }
+        }
+    }
+
+    // Randomly fill in the 4 side walls and create keycard pickup
+    public void Randomize()
     {
         roomCode = "";
         for (int i = 0; i < 4; i++)
@@ -45,49 +83,48 @@ public class Block : MonoBehaviour
             codeArray[Random.Range(0, 4)] = '0';
             roomCode = new string(codeArray);
         }
-        GameObject tilemapPrefab = Resources.Load<GameObject>("Block Themes/Lab/room_" + roomCode);
-        if (tilemapPrefab == null) {
-            Debug.LogWarning("Failed to find tilemap prefab at Block Themes/Lab/room_" + roomCode, transform);
-        }
-        else
-        {
-            Instantiate(tilemapPrefab, transform);
-        }
+        MakeTilemap();
         if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance.GetValue())
         {
             Instantiate(manaPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
         }
     }
 
-    // Slide the block at a constant speed to gridPos + shift
-    public void Shift(Vector3Int shift)
+    public void MakeTilemap()
     {
-        gridPos += shift;
-        StartCoroutine(ShiftRoutine());
-    }
-    IEnumerator ShiftRoutine()
-    {
-        float startTime = Time.time;
-        Vector3 targetPos = LevelController.instance.grid.CellToWorld(gridPos);
-        Vector3 startPos = transform.position;
-        while (Time.time < startTime + GameManager.instance.settings.shiftTime)
+        GameObject tilemapPrefab = Resources.Load<GameObject>("Block Themes/Lab/room_" + roomCode);
+        if (tilemapPrefab == null)
         {
-            transform.position = Vector3.Lerp(startPos, targetPos, (Time.time - startTime) / GameManager.instance.settings.shiftTime);
-            yield return null;
+            Debug.LogWarning("Failed to find tilemap prefab at Block Themes/Lab/room_" + roomCode, transform);
         }
-        transform.position = targetPos;
+        else
+        {
+            Instantiate(tilemapPrefab, transform);
+        }
+    }
+
+    // Slide the block at a constant speed to gridPos + shift
+    public bool Shift(Vector3Int shift)
+    {
+        if (!shifting)
+        {
+            shifting = true;
+            shiftStartTime = GameManager.instance.gameTime;
+            shiftStartPos = transform.position;
+            if (PlayerMovement.instance.gridPos == gridPos)
+            {
+                PlayerMovement.instance.StartRiding(shift);
+            }
+            gridPos += shift;
+            return true;
+        }
+        return false;
     }
 
     // Destroy the block once it finishes shifting
     public void Fade()
     {
         fading = true;
-        StartCoroutine(FadeRoutine());
-    }
-    IEnumerator FadeRoutine()
-    {
-        yield return new WaitForSeconds(GameManager.instance.settings.shiftTime);
-        Destroy(gameObject);
     }
 
     // Returns true if there is a wall on the side of this block in direction dir

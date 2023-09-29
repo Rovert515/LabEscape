@@ -28,13 +28,11 @@ public class GameManager : MonoBehaviour
 
     public SettingsPreset settingsPreset;
 
-    private Acid lava;
-    private CameraMovement cam;
-    private Border border;
     private SceneID currentScene;
     private PlayState playState;
 
     public GameSettings settings { get; private set; }
+    public float gameTime { get; private set; }
 
     private void Awake()
     {
@@ -54,6 +52,7 @@ public class GameManager : MonoBehaviour
                 break;
             case SceneID.game:
                 settings = GameSettings.presets[settingsPreset];
+                gameTime = 0;
                 playState = PlayState.loading;
                 AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1);
                 // Loading bar here???
@@ -82,6 +81,7 @@ public class GameManager : MonoBehaviour
                 switch (playState)
                 {
                     case PlayState.playing:
+                        gameTime += Time.deltaTime;
                         if (gameUpdate != null)
                         {
                             gameUpdate();
@@ -100,5 +100,9 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
+    }
+    public void PlayGame()
+    {
+        SetScene(SceneID.game);
     }
 }

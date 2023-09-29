@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
         // Updates the UI to reflect current game state
         public void UpdateUI()
     {
-        manaLabel.text = "Shifts: " + PlayerController.instance.manaCount;
+        manaLabel.text = "Shifts: " + PlayerController.instance.keycardCount;
         heightLabel.text = "Height: " + LevelController.instance.bottomRow;
     }
 }

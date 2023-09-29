@@ -14,7 +14,6 @@ public class LevelController : MonoBehaviour
     public GameObject blockPrefab;
     public float manaChance;
     
-    public bool shifting { get; private set; } // Whether or not there are any blocks currently shifting
     public Grid grid { get; private set; }
     public Vector3 cellShift { get; private set; } // Horizontal and vertical distance between the centers of cells
     public int topRow { get; private set; } // Row above the current highest row (exclusive)
@@ -41,7 +40,6 @@ public class LevelController : MonoBehaviour
         grid = GetComponent<Grid>();
         cellShift = grid.cellSize + grid.cellGap;
         width = cellShift.x * GameManager.instance.settings.levelWidth;
-        shifting = false;
         topRow = 0;
         bottomRow = 0;
         UpdateRows();
@@ -71,6 +69,7 @@ public class LevelController : MonoBehaviour
     private Block CreateBlock(Vector3Int gridPos)
     {
         Block block = Instantiate(blockPrefab, grid.CellToWorld(gridPos), Quaternion.identity, transform).GetComponent<Block>();
+        block.Randomize();
         return block;
     }
     private bool DestroyBlock(Vector3Int gridPos)
@@ -148,68 +147,71 @@ public class LevelController : MonoBehaviour
     // Shifts the nth column/row by shift, which should be either 1 or -1
     public bool ShiftColumn(int n, int shift)
     {
-        if (!shifting)
+        List<Block> column = GetColumn(n);
+        foreach (Block block in column)
         {
-            StartCoroutine(ShiftRoutine());
-            Block addedBlock = null;
-            if (shift == 1)
+            if (block.shifting)
             {
-                addedBlock = CreateBlock(new Vector3Int(n, bottomRow - 1));
+                return false;
             }
-            else if (shift == -1)
-            {
-                addedBlock = CreateBlock(new Vector3Int(n, topRow));
-            }
-            else
-            {
-                Debug.LogWarning("ShiftColumn() called with invalid shift value", transform);
-            }
-            List<Block> column = GetColumn(n);
-            column.Add(addedBlock);
-            foreach (Block block in column)
-            {
-                block.Shift(new Vector3Int(0, shift));
-                if (!InBounds(block.gridPos))
-                {
-                    block.Fade();
-                }
-            }
-            return true;
         }
-        return false;
-        
+        Block addedBlock = null;
+        if (shift == 1)
+        {
+            addedBlock = CreateBlock(new Vector3Int(n, bottomRow - 1));
+        }
+        else if (shift == -1)
+        {
+            addedBlock = CreateBlock(new Vector3Int(n, topRow));
+        }
+        else
+        {
+            Debug.LogWarning("ShiftColumn() called with invalid shift value", transform);
+        }
+        column.Add(addedBlock);
+        foreach (Block block in column)
+        {
+            block.Shift(new Vector3Int(0, shift));
+            if (!InBounds(block.gridPos))
+            {
+                block.Fade();
+            }
+        }
+        return true;
     }
     public bool ShiftRow(int n, int shift)
     {
-        if (!shifting)
+        List<Block> row = GetRow(n);
+        foreach (Block block in row)
         {
-            StartCoroutine(ShiftRoutine());
-            Block addedBlock = null;
-            if (shift == 1)
+            if (block.shifting)
             {
-                addedBlock = CreateBlock(new Vector3Int(-1, n));
+                return false;
             }
-            else if (shift == -1)
-            {
-                addedBlock = CreateBlock(new Vector3Int(GameManager.instance.settings.levelWidth, n));
-            }
-            else
-            {
-                Debug.Log("ShiftColumn() called with invalid shift value");
-            }
-            List<Block> row = GetRow(n);
-            row.Add(addedBlock);
-            foreach (Block block in row)
-            {
-                block.Shift(new Vector3Int(shift, 0));
-                if (!InBounds(block.gridPos))
-                {
-                    block.Fade();
-                }
-            }
-            return true;
         }
-        return false;
+        Block addedBlock = null;
+        if (shift == 1)
+        {
+            addedBlock = CreateBlock(new Vector3Int(-1, n));
+        }
+        else if (shift == -1)
+        {
+            addedBlock = CreateBlock(new Vector3Int(GameManager.instance.settings.levelWidth, n));
+        }
+        else
+        {
+            Debug.LogWarning("ShiftRow() called with invalid shift value", transform);
+        }
+        row.Add(addedBlock);
+        foreach (Block block in row)
+        {
+            block.Shift(new Vector3Int(shift, 0));
+            if (!InBounds(block.gridPos))
+            {
+                block.Fade();
+            }
+        }
+        return true;
     }
 
     // Shifts the column/row that origin is in the direction dir
@@ -224,14 +226,6 @@ public class LevelController : MonoBehaviour
             return ShiftRow(origin.y, dir.x);
         }
         return false;
-    }
-
-    // Updates shifting variable
-    IEnumerator ShiftRoutine()
-    {
-        shifting = true;
-        yield return new WaitForSeconds(GameManager.instance.settings.shiftTime);
-        shifting = false;
     }
 
     // Whether or not a gridPos is inside the bounds of the current level
