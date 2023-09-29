@@ -31,62 +31,62 @@ public class GameSettings
 
     public GameSettings
         (HeightBasedFloat density,
-        HeightBasedFloat manaChance,
-        HeightBasedFloat lavaSpeed,
-        int manaValue = 1,
+        HeightBasedFloat keycardChance,
+        HeightBasedFloat acidSpeed,
+        int keycardValue = 1,
         int startingMana = 5,
         float moveTime = 0.25f,
         float shiftTime = 0.25f,
         int levelWidth = 5,
-        float lavaSpeedMultiplier = 3f)
+        float acidSpeedMultiplier = 3f)
     {
         this.density = density;
-        this.manaChance = manaChance;
-        this.lavaSpeed = lavaSpeed;
-        this.manaValue = manaValue;
+        this.manaChance = keycardChance;
+        this.lavaSpeed = acidSpeed;
+        this.manaValue = keycardValue;
         this.startingMana = startingMana;
         this.moveTime = moveTime;
         this.shiftTime = shiftTime;
         this.levelWidth = levelWidth;
-        this.lavaSpeedMultiplier = lavaSpeedMultiplier;
+        this.lavaSpeedMultiplier = acidSpeedMultiplier;
     }
 
     static GameSettings()
     {
         presets[SettingsPreset.testing] = new GameSettings(
             density: new HeightBasedFloat(0.2f),
-            manaChance: new HeightBasedFloat(0.1f, 0.5f, max: 0.5f),
-            lavaSpeed: new HeightBasedFloat(0f, 5f)
+            keycardChance: new HeightBasedFloat(0.1f, 0.5f, max: 0.5f),
+            acidSpeed: new HeightBasedFloat(0f, 5f)
             );
         presets[SettingsPreset.dynamic] = new GameSettings(
             density: new HeightBasedFloat(0.3f, 0.025f, max: 0.375f),
-            manaChance: new HeightBasedFloat(0.15f, -0.025f, min: 0.075f),
-            lavaSpeed: new HeightBasedFloat(1f, 0.5f, max: 2.5f)
+            keycardChance: new HeightBasedFloat(0.15f, -0.025f, min: 0.075f),
+            acidSpeed: new HeightBasedFloat(1f, 0.5f, max: 2.5f)
             );
         presets[SettingsPreset.easy] = new GameSettings(
             density: new HeightBasedFloat(0.3f),
-            manaChance: new HeightBasedFloat(0.15f),
-            lavaSpeed: new HeightBasedFloat(1f)
+            keycardChance: new HeightBasedFloat(0.15f),
+            acidSpeed: new HeightBasedFloat(1f)
             );
         presets[SettingsPreset.medium] = new GameSettings(
             density: new HeightBasedFloat(0.325f),
-            manaChance: new HeightBasedFloat(0.125f),
-            lavaSpeed: new HeightBasedFloat(1.5f)
+            keycardChance: new HeightBasedFloat(0.125f),
+            acidSpeed: new HeightBasedFloat(1.5f)
             );
         presets[SettingsPreset.hard] = new GameSettings(
             density: new HeightBasedFloat(0.35f),
-            manaChance: new HeightBasedFloat(0.1f),
-            lavaSpeed: new HeightBasedFloat(2f)
+            keycardChance: new HeightBasedFloat(0.1f),
+            acidSpeed: new HeightBasedFloat(2f)
             );
         presets[SettingsPreset.puzzle] = new GameSettings(
             density: new HeightBasedFloat(0.4f),
-            manaChance: new HeightBasedFloat(0.1f),
-            lavaSpeed: new HeightBasedFloat(0f)
+            keycardChance: new HeightBasedFloat(0.1f),
+            acidSpeed: new HeightBasedFloat(0f)
             );
         presets[SettingsPreset.blitz] = new GameSettings(
             density: new HeightBasedFloat(0.3f),
-            manaChance: new HeightBasedFloat(0.1f),
-            lavaSpeed: new HeightBasedFloat(5f),
+            keycardChance: new HeightBasedFloat(0.1f),
+            acidSpeed: new HeightBasedFloat(5f),
             moveTime: 0.15f,
             shiftTime: 0.15f
             );

@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance { get; private set; }
 
-    public Lava lava;
+    public Acid lava;
 
     public int manaCount { get; private set; }
 
@@ -23,12 +23,22 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
     }
+    private void OnEnable()
+    {
+        GameManager.instance.initializeOthers += Initialize;
+        GameManager.instance.gameUpdate += GameUpdate;
+    }
+    private void OnDisable()
+    {
+        GameManager.instance.initializeOthers -= Initialize;
+        GameManager.instance.gameUpdate -= GameUpdate;
+    }
     public void Initialize()
     {
         manaCount = GameManager.instance.settings.startingMana;
         ConsumeMana();
     }
-    private void Update()
+    private void GameUpdate()
     {
         // Determine directional input
         Vector3Int inputDir = Vector3Int.zero;
@@ -93,7 +103,7 @@ public class PlayerController : MonoBehaviour
         // Restart scene if player goes below the height of the lava
         if (transform.position.y < lava.height)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            GameManager.instance.SetScene(SceneID.game);
         }
     }
 
@@ -101,7 +111,7 @@ public class PlayerController : MonoBehaviour
     // Called by PlayerMovement when the player ends a movement
     public bool ConsumeMana()
     {
-        Mana mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Mana>();
+        Keycard mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Keycard>();
         if (mana != null)
         {
             manaCount += GameManager.instance.settings.manaValue;

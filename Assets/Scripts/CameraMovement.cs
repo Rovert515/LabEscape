@@ -11,15 +11,25 @@ public class CameraMovement : MonoBehaviour
     private float bottomOfLevel;
     public float verticalOffset;
 
+    private void OnEnable()
+    {
+        GameManager.instance.initializeOthers += Initialize;
+        GameManager.instance.gameUpdate += GameUpdate;
+    }
+    private void OnDisable()
+    {
+        GameManager.instance.initializeOthers -= Initialize;
+        GameManager.instance.gameUpdate -= GameUpdate;
+    }
     public void Initialize()
     {
         cameraHeight = LevelController.instance.width*0.5f;
         Camera.main.orthographicSize = cameraHeight;
         bottomOfLevel = LevelController.instance.grid.CellToWorld(new Vector3Int(0, LevelController.instance.bottomRow)).y;
-        transform.localPosition = new Vector3(LevelController.instance.width/2, Mathf.Clamp(PlayerMovement.instance.transform.position.y + verticalOffset, bottomOfLevel + cameraHeight, Mathf.Infinity), -10);
+        transform.localPosition = new Vector3(LevelController.instance.width/2, LevelController.instance.width / 2 + verticalOffset, -10);
         desiredPos = transform.position;
     }
-    private void Update()
+    private void GameUpdate()
     {
         UpdateDesiredPos();
         transform.position += (desiredPos - transform.position) * followSpeed * Time.deltaTime;

@@ -3,18 +3,27 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Lava : MonoBehaviour
+public class Acid : MonoBehaviour
 {
     public float height { get; private set; }
-
+    private void OnEnable()
+    {
+        GameManager.instance.initializeOthers += Initialize;
+        GameManager.instance.gameUpdate += GameUpdate;
+    }
+    private void OnDisable()
+    {
+        GameManager.instance.initializeOthers -= Initialize;
+        GameManager.instance.gameUpdate -= GameUpdate;
+    }
     public void Initialize()
     {
         height = -10;
-        transform.localScale = new Vector3(LevelController.instance.width, Camera.main.orthographicSize * 2, 1);
+        transform.localScale = new Vector3(LevelController.instance.width, 100, 1);
         transform.localPosition = new Vector3(LevelController.instance.width / 2, 0);
         UpdatePos();
     }
-    private void Update()
+    private void GameUpdate()
     {
         // Lave moves 3x faster if it is offscreen
         if (height > Camera.main.transform.position.y - Camera.main.orthographicSize)

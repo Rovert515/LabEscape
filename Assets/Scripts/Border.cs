@@ -9,11 +9,19 @@ public class Border : MonoBehaviour
     public Tile borderTile;
 
     private Tilemap tilemap;
-
+    private void OnEnable()
+    {
+        GameManager.instance.initializeOthers += Initialize;
+        //GameManager.instance.gameUpdate += GameUpdate;
+    }
+    private void OnDisable()
+    {
+        GameManager.instance.initializeOthers -= Initialize;
+        //GameManager.instance.gameUpdate -= GameUpdate;
+    }
     public void Initialize()
     {
         tilemap = GetComponent<Tilemap>();
-        LevelController.instance.UpdateRows();
         int levelHeight = LevelController.instance.topRow - LevelController.instance.bottomRow;
         int levelWidth = GameManager.instance.settings.levelWidth;
         tilemap.ClearAllTiles();

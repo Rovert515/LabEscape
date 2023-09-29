@@ -17,10 +17,20 @@ public class PlayerMovement : MonoBehaviour
         instance = this;
         animator = GetComponent<Animator>();
     }
+    private void OnEnable()
+    {
+        GameManager.instance.initializeOthers += Initialize;
+        //GameManager.instance.gameUpdate += GameUpdate;
+    }
+    private void OnDisable()
+    {
+        GameManager.instance.initializeOthers -= Initialize;
+        //GameManager.instance.gameUpdate -= GameUpdate;
+    }
     public void Initialize()
     {
         moving = false;
-        transform.position = new Vector3(LevelController.instance.width/2, Camera.main.orthographicSize);
+        transform.position = new Vector3(LevelController.instance.width/2, LevelController.instance.width / 2);
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }

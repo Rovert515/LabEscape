@@ -25,6 +25,16 @@ public class LevelController : MonoBehaviour
     {
         instance = this;
     }
+    private void OnEnable()
+    {
+        GameManager.instance.initializeLevel += Initialize;
+        GameManager.instance.gameUpdate += GameUpdate;
+    }
+    private void OnDisable()
+    {
+        GameManager.instance.initializeLevel -= Initialize;
+        GameManager.instance.gameUpdate -= GameUpdate;
+    }
     public void Initialize()
     {
         transform.localPosition = Vector3.zero;
@@ -34,6 +44,10 @@ public class LevelController : MonoBehaviour
         shifting = false;
         topRow = 0;
         bottomRow = 0;
+        UpdateRows();
+    }
+    private void GameUpdate()
+    {
         UpdateRows();
     }
 
