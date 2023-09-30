@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
         // Restart scene if player goes below the height of the lava
         if (transform.position.y < lava.height)
         {
-            GameManager.instance.SetScene(SceneID.game);
+            GameManager.instance.LoadScene(SceneID.game);
         }
     }
 

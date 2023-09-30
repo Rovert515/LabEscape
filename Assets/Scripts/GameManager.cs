@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public enum SceneID
 {
-    start,
     title,
     game
 }
@@ -37,55 +36,58 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        currentScene = SceneID.start;
-        playState = PlayState.playing;
-        settings = GameSettings.presets[settingsPreset];
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
     private void Start()
     {
-        SetScene(SceneID.title);
+        settings = GameSettings.presets[settingsPreset];
+        InitializeScene(currentScene);
     }
-    public void SetScene(SceneID sceneID)
+    public void LoadScene(SceneID scene)
     {
         AsyncOperation asyncLoad;
-        switch (sceneID)
+        playState = PlayState.loading;
+        asyncLoad = SceneManager.LoadSceneAsync((int) scene);
+        // Loading bar here???
+        asyncLoad.completed += operation =>
+        {
+            InitializeScene(scene);
+        };
+    }
+    private void InitializeScene(SceneID scene)
+    {
+        currentScene = scene;
+        switch (scene)
         {
             case SceneID.title:
                 gameTime = 0;
-                asyncLoad = SceneManager.LoadSceneAsync(0);
-                asyncLoad.completed += operation =>
+                LevelController.instance.levelWidth = 10;
+                LevelController.instance.transform.position = Camera.main.ScreenToWorldPoint(Vector3.zero) + Vector3.forward * 10;
+                if (initializeLevel != null)
                 {
-                    currentScene = sceneID;
-                    LevelController.instance.levelWidth = 10;
-                    LevelController.instance.transform.position = Camera.main.ScreenToWorldPoint(Vector3.zero) + Vector3.forward * 10;
-                    if (initializeLevel != null)
-                    {
-                        initializeLevel();
-                    }
-                };
+                    initializeLevel();
+                }
                 break;
             case SceneID.game:
                 gameTime = 0;
-                playState = PlayState.loading;
-                asyncLoad = SceneManager.LoadSceneAsync(1);
-                // Loading bar here???
-                asyncLoad.completed += operation =>
+                playState = PlayState.playing;
+                LevelController.instance.levelWidth = settings.levelWidth;
+                if (initializeLevel != null)
                 {
-                    currentScene = sceneID;
-                    LevelController.instance.levelWidth = settings.levelWidth;
-                    if (initializeLevel != null)
-                    {
-                        initializeLevel();
-                    }
-                    if (initializeOthers != null)
-                    {
-                        initializeOthers();
-                    }
-                    playState = PlayState.playing;
-                };
+                    initializeLevel();
+                }
+                if (initializeOthers != null)
+                {
+                    initializeOthers();
+                }
                 break;
         }
     }
@@ -123,6 +125,10 @@ public class GameManager : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
                             playState = PlayState.playing;
+                        }
+                        if (Input.GetKeyDown(KeyCode.M))
+                        {
+                            LoadScene(SceneID.title);
                         }
                         break;
                 }
