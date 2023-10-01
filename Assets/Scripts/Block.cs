@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,13 +9,13 @@ using UnityEngine.Tilemaps;
 public class Block : MonoBehaviour
 {
     public GameObject manaPrefab;
+    public string roomCode;
 
     public Vector3Int gridPos { get; private set; }
     public bool fading { get; private set; } // Whether or not the block is in the process of being deleted
     public bool shifting { get; private set; }
 
     private Grid grid;
-    private string roomCode;
     
     private float shiftStartTime;
     private Vector3 shiftStartPos;
@@ -54,6 +55,11 @@ public class Block : MonoBehaviour
                 }
                 if (fading)
                 {
+                    PlayerMovement player = GetComponentInChildren<PlayerMovement>();
+                    if (player != null)
+                    {
+                        player.transform.parent = LevelController.instance.transform;
+                    }
                     Destroy(gameObject);
                 }
             }

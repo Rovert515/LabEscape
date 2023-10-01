@@ -71,6 +71,12 @@ public class LevelController : MonoBehaviour
         block.Randomize();
         return block;
     }
+    private Block CloneBlock(Block block, Vector3Int gridPos)
+    {
+        Block clone = Instantiate(block, grid.CellToWorld(gridPos), Quaternion.identity, transform).GetComponent<Block>();
+        clone.roomCode = block.roomCode;
+        return clone;
+    }
     private bool DestroyBlock(Vector3Int gridPos)
     {
         Block block = GetBlock(gridPos);
@@ -200,11 +206,11 @@ public class LevelController : MonoBehaviour
         Block addedBlock = null;
         if (shift == 1)
         {
-            addedBlock = CreateBlock(new Vector3Int(-1, n));
+            addedBlock = CloneBlock(GetBlock(new Vector3Int(levelWidth - 1, n)), new Vector3Int(-1, n));
         }
         else if (shift == -1)
         {
-            addedBlock = CreateBlock(new Vector3Int(levelWidth, n));
+            addedBlock = CloneBlock(GetBlock(new Vector3Int(0, n)), new Vector3Int(levelWidth, n));
         }
         else
         {

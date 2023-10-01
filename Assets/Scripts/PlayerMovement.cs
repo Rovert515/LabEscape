@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Animator animator;
     private float moveStartTime;
-    private Vector3 moveStartPos;
+    private Vector3Int moveDir;
 
     private void Awake()
     {
@@ -51,24 +51,35 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 // move towards gridPos
-                transform.position = Vector3.Lerp(moveStartPos, LevelController.instance.CenterOfBlock(gridPos), (GameManager.instance.gameTime - moveStartTime)/GameManager.instance.settings.moveTime);
+                Vector3 newPos = LevelController.instance.CenterOfBlock(gridPos) - Vector3.Scale((Vector3)moveDir, LevelController.instance.cellShift) * (1-(GameManager.instance.gameTime - moveStartTime)/GameManager.instance.settings.moveTime);
+                newPos.x = (newPos.x + LevelController.instance.width) % LevelController.instance.width;
+                transform.position = newPos;
             }
         }
+        if (riding)
+        {
+            Vector3 newPos = transform.position;
+            newPos.x = (newPos.x + LevelController.instance.width) % LevelController.instance.width;
+            transform.position = newPos;
+        }
+        
     }
 
     // Attempt to move in the direction dir, return successfulness
     public bool Move(Vector3Int dir)
     {
-        if (LevelController.instance.InBounds(gridPos + dir) && !moving && !LevelController.instance.GetBlock(gridPos).shifting)
+        Vector3Int targetPos = gridPos + dir;
+        targetPos.x = (targetPos.x + LevelController.instance.levelWidth) % LevelController.instance.levelWidth;
+        if (LevelController.instance.InBounds(targetPos) && !moving && !LevelController.instance.GetBlock(gridPos).shifting)
         {
-            Block targetBlock = LevelController.instance.GetBlock(gridPos + dir);
+            Block targetBlock = LevelController.instance.GetBlock(targetPos);
             if (!LevelController.instance.GetBlock(gridPos).GetWall(dir) && !targetBlock.GetWall(-dir) && !targetBlock.shifting)
             {
-                gridPos += dir;
                 moving = true;
                 animator.SetBool("moving", moving);
                 moveStartTime = GameManager.instance.gameTime;
-                moveStartPos = transform.position;
+                moveDir = dir;
+                gridPos = targetPos;
                 return true;
             }
         }
@@ -78,7 +89,9 @@ public class PlayerMovement : MonoBehaviour
     // Attemt to shift the level centered at the player, return successfulness
     public bool Shift(Vector3Int dir)
     {
-        if (LevelController.instance.InBounds(gridPos + dir) && !moving)
+        Vector3Int targetPos = gridPos + dir;
+        targetPos.x = (targetPos.x + LevelController.instance.levelWidth) % LevelController.instance.levelWidth;
+        if (LevelController.instance.InBounds(targetPos) && !moving)
         {
             if (LevelController.instance.ShiftFrom(gridPos, dir))
             {
@@ -95,6 +108,7 @@ public class PlayerMovement : MonoBehaviour
             riding = true;
             transform.parent = LevelController.instance.GetBlock(gridPos).transform;
             gridPos += shift;
+            gridPos = new Vector3Int((gridPos.x + LevelController.instance.levelWidth) % LevelController.instance.levelWidth, gridPos.y);
         }
     }
     public void StopRiding()
