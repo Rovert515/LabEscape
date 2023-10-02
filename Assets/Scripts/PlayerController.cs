@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 // Handles the input and manages the player's resources
 public class PlayerController : MonoBehaviour
 {
+    public EndScreenManager endScreenManager;
+
     public static PlayerController instance { get; private set; }
 
     public Acid lava;
@@ -102,7 +104,14 @@ public class PlayerController : MonoBehaviour
         // Restart scene if player goes below the height of the lava
         if (transform.position.y < lava.height)
         {
-            GameManager.instance.LoadScene(SceneID.game);
+            //GameManager.instance.LoadScene(SceneID.game);
+            endScreenManager.ShowEndScreen();
+
+            //not working
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                GameManager.instance.LoadScene(SceneID.game);
+            }
         }
     }
 
