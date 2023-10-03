@@ -11,6 +11,8 @@ public class LevelController : MonoBehaviour
 {
     public static LevelController instance { get; private set; }
 
+    private TilemapRenderer tilemapRenderer;
+
     public GameObject blockPrefab;
     public int levelWidth;
     
@@ -23,6 +25,7 @@ public class LevelController : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        tilemapRenderer = GetComponentInChildren<TilemapRenderer>();
     }
     private void OnEnable()
     {

@@ -27,6 +27,9 @@ public class Block : MonoBehaviour
         shifting = false;
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
     }
+
+ 
+
     private void OnEnable()
     {
         //GameManager.instance.initializeLevel += Initialize;
@@ -99,6 +102,7 @@ public class Block : MonoBehaviour
         }
     }
 
+
     public void MakeTilemap()
     {
         GameObject tilemapPrefab = Resources.Load<GameObject>("Block Themes/Lab/room_" + roomCode);
@@ -108,16 +112,33 @@ public class Block : MonoBehaviour
         }
         else
         {
-            Instantiate(tilemapPrefab, transform);
+            Tilemap tilemap = Instantiate(tilemapPrefab, transform).GetComponent<Tilemap>();
+
+            // Check if bottomRow is 10 or 20 and adjust the hue accordingly
+            Color tileColor = Color.white; // Default color
+            if (gridPos.y >= 50)
+            {
+                // Adjust color for green 
+                tileColor = Color.green;
+            }
+            if (gridPos.y >= 100)
+            {
+                // Adjust color for red
+                tileColor = Color.red;
+            }
+            tilemap.color = tileColor;
+
         }
     }
+
+    // GameManager.instance.settings.(colorChange or something)
 
     // Slide the block at a constant speed to gridPos + shift
     public bool Shift(Vector3Int shift)
     {
         if (!shifting)
         {
-            shifting = true;
+            shifting = true; 
             shiftStartTime = GameManager.instance.gameTime;
             shiftStartPos = transform.position;
             if (PlayerMovement.instance != null)
