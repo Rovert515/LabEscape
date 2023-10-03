@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
             InitializeScene(scene);
         };
     }
-    public void InitializeScene(SceneID scene)
+    private void InitializeScene(SceneID scene)
     {
         currentScene = scene;
         switch (scene)
