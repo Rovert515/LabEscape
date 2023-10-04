@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     private AudioClip easyMusic;
     private AudioClip buttonPress;
     private AudioClip pickup;
+    private AudioClip goodPickup;
 
     private AudioSource[] musicSources = new AudioSource[2];
     private AudioSource oneShotSource;
@@ -27,6 +28,7 @@ public class SoundManager : MonoBehaviour
         easyMusic = Resources.Load<AudioClip>("Sounds/easy music");
         buttonPress = Resources.Load<AudioClip>("Sounds/button press");
         pickup = Resources.Load<AudioClip>("Sounds/pickup");
+        goodPickup = Resources.Load<AudioClip>("Sounds/good pickup");
     }
 
     private void Start()
@@ -61,5 +63,10 @@ public class SoundManager : MonoBehaviour
     public void Pickup()
     {
         oneShotSource.PlayOneShot(pickup, 0.5f);
+    }
+
+    public void GoodPickup()
+    {
+        oneShotSource.PlayOneShot(goodPickup, 0.5f);
     }
 }

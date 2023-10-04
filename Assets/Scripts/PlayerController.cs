@@ -114,8 +114,17 @@ public class PlayerController : MonoBehaviour
         if (keycard != null)
         {
             keycardCount += keycard.value;
+            
+            if (keycard.value > 1)
+            {
+                SoundManager.instance.GoodPickup();
+            }
+            else
+            {
+                SoundManager.instance.Pickup();
+            }
+            
             Destroy(keycard.gameObject);
-            SoundManager.instance.Pickup();
             return true;
         }
         return false;
