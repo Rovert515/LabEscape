@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SceneID
+public enum SceneID // these should be in the same order as the scenes are in the build manager
 {
     title,
     game
@@ -14,6 +14,7 @@ public enum PlayState
 {
     playing,
     paused,
+    gameOver,
     loading
 }
 
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
     public SettingsPreset settingsPreset;
 
     private PlayState playState;
+    private Canvas gameOverCanvas;
 
     public GameSettings settings { get; private set; }
     public float gameTime { get; private set; }
@@ -94,6 +96,12 @@ public class GameManager : MonoBehaviour
             case SceneID.game:
                 gameTime = 0;
                 playState = PlayState.playing;
+                gameOverCanvas = GameObject.Find("Game Over Canvas").GetComponent<Canvas>();
+                if (gameOverCanvas == null)
+                {
+                    Debug.LogError("Failed to find the game over canvas", transform);
+                }
+                gameOverCanvas.enabled = false;
                 settings = GameSettings.presets[settingsPreset];
                 LevelController.instance.levelWidth = settings.levelWidth;
                 if (initializeLevel != null)
@@ -148,8 +156,28 @@ public class GameManager : MonoBehaviour
                             LoadScene(SceneID.title);
                         }
                         break;
+                    case PlayState.gameOver:
+                        if (Input.GetKeyDown(KeyCode.R))
+                        {
+                            LoadScene(SceneID.game);
+                        }
+                        else if (Input.GetKeyDown(KeyCode.M))
+                        {
+                            LoadScene(SceneID.title);
+                        }
+                        break;
                 }
                 break;
         }
     }
+
+    public void GameOver()
+    {
+        if (currentScene == SceneID.game)
+        {
+            gameOverCanvas.enabled = true;
+            playState = PlayState.gameOver;
+        }
+    }
 }
+
