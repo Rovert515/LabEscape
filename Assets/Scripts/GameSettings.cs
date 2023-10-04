@@ -64,19 +64,19 @@ public class GameSettings
             acidSpeed: new HeightBasedFloat(1f, 0.5f, max: 2.5f)
             );
         presets[SettingsPreset.easy] = new GameSettings(
-            density: new HeightBasedFloat(0.3f),
-            keycardChance: new HeightBasedFloat(0.15f),
-            acidSpeed: new HeightBasedFloat(1f)
+            density: new HeightBasedFloat(0.275f),  // 0.3f
+            keycardChance: new HeightBasedFloat(0.165f), // 0.15f
+            acidSpeed: new HeightBasedFloat(1.15f) // 1.0f
             );
         presets[SettingsPreset.medium] = new GameSettings(
-            density: new HeightBasedFloat(0.325f),
-            keycardChance: new HeightBasedFloat(0.125f),
-            acidSpeed: new HeightBasedFloat(1.5f)
+            density: new HeightBasedFloat(0.3f), // 0.275f
+            keycardChance: new HeightBasedFloat(0.140f), // 0.125f
+            acidSpeed: new HeightBasedFloat(1.5f) // unchanged
             );
         presets[SettingsPreset.hard] = new GameSettings(
-            density: new HeightBasedFloat(0.35f),
-            keycardChance: new HeightBasedFloat(0.1f),
-            acidSpeed: new HeightBasedFloat(2f)
+            density: new HeightBasedFloat(0.325f), // 3.5f
+            keycardChance: new HeightBasedFloat(0.115f), // 0.1f
+            acidSpeed: new HeightBasedFloat(1.8f) // 2.0f
             );
         presets[SettingsPreset.puzzle] = new GameSettings(
             density: new HeightBasedFloat(0.4f),
