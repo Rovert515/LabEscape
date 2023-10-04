@@ -70,19 +70,19 @@ public class GameSettings
             density: new HeightBasedFloat(0.3f),
             keycardChance: new HeightBasedFloat(0.15f),
             acidSpeed: new HeightBasedFloat(1f),
-            blockColor: Color.green
+            blockColor: Color.Lerp(Color.white, Color.green, 0.3f)
             );
         presets[SettingsPreset.medium] = new GameSettings(
             density: new HeightBasedFloat(0.325f),
             keycardChance: new HeightBasedFloat(0.125f),
             acidSpeed: new HeightBasedFloat(1.5f),
-            blockColor: Color.yellow
+            blockColor: Color.Lerp(Color.white, Color.yellow, 0.3f)
             );
         presets[SettingsPreset.hard] = new GameSettings(
             density: new HeightBasedFloat(0.35f),
             keycardChance: new HeightBasedFloat(0.1f),
             acidSpeed: new HeightBasedFloat(2f),
-            blockColor: Color.red
+            blockColor: Color.Lerp(Color.white, Color.red, 0.3f)
             );
         presets[SettingsPreset.puzzle] = new GameSettings(
             density: new HeightBasedFloat(0.4f),

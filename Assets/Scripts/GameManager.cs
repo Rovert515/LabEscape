@@ -49,13 +49,21 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         settings = GameSettings.presets[settingsPreset];
+        SetSettings(settingsPreset);
         InitializeScene(currentScene);
     }
 
-    public void SetDifficulty(SettingsPreset preset)
+    public void SetSettings(SettingsPreset preset)
     {
-        settingsPreset = preset;
-        settings = GameSettings.presets[settingsPreset];
+        if (settingsPreset != preset)
+        {
+            settingsPreset = preset;
+            settings = GameSettings.presets[settingsPreset];
+            if (currentScene == SceneID.title)
+            {
+                initializeLevel();
+            }
+        }
     }
 
     public void LoadScene(SceneID scene)

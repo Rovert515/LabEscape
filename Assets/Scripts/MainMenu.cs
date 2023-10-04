@@ -11,31 +11,31 @@ public class MainMenu : MonoBehaviour
 
     public void DiffDynamic()
     {
-        GameManager.instance.SetDifficulty(SettingsPreset.dynamic);
+        GameManager.instance.SetSettings(SettingsPreset.dynamic);
     }
 
     public void DiffEasy()
     {
-        GameManager.instance.SetDifficulty(SettingsPreset.easy);
+        GameManager.instance.SetSettings(SettingsPreset.easy);
     }
 
     public void DiffMedium()
     {
-        GameManager.instance.SetDifficulty(SettingsPreset.medium);
+        GameManager.instance.SetSettings(SettingsPreset.medium);
     }
 
     public void DiffHard()
     {
-        GameManager.instance.SetDifficulty(SettingsPreset.hard);
+        GameManager.instance.SetSettings(SettingsPreset.hard);
     }
 
     public void DiffPuzzle()
     {
-        GameManager.instance.SetDifficulty(SettingsPreset.puzzle);
+        GameManager.instance.SetSettings(SettingsPreset.puzzle);
     }
 
     public void DiffBlitz()
     {
-        GameManager.instance.SetDifficulty(SettingsPreset.blitz);
+        GameManager.instance.SetSettings(SettingsPreset.blitz);
     }
 }
