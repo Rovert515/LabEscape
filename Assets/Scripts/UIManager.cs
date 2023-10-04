@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
+    
     public static UIManager instance { get; private set; }
 
     private Label manaLabel;
@@ -33,5 +34,15 @@ public class UIManager : MonoBehaviour
     {
         manaLabel.text = "Shifts: " + PlayerController.instance.keycardCount;
         heightLabel.text = "Height: " + LevelController.instance.bottomRow;
+    }
+    
+
+    public void TryAgain()
+    {
+        GameManager.instance.LoadScene(SceneID.game);
+    }
+    public void Back()
+    {
+        GameManager.instance.LoadScene(SceneID.title);
     }
 }
