@@ -110,11 +110,11 @@ public class PlayerController : MonoBehaviour
     // Called by PlayerMovement when the player ends a movement
     public bool PickUp()
     {
-        Keycard mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Keycard>();
-        if (mana != null)
+        Keycard keycard = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Keycard>();
+        if (keycard != null)
         {
-            keycardCount += GameManager.instance.settings.manaValue;
-            Destroy(mana.gameObject);
+            keycardCount += keycard.value;
+            Destroy(keycard.gameObject);
             return true;
         }
         return false;

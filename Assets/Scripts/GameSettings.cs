@@ -29,6 +29,7 @@ public class GameSettings
     public HeightBasedFloat lavaSpeed;
     public float lavaSpeedMultiplier;
     public Color? blockColor;
+    public float goldenChance;
 
     public GameSettings
         (HeightBasedFloat density,
@@ -40,7 +41,8 @@ public class GameSettings
         float shiftTime = 0.25f,
         int levelWidth = 5,
         float acidSpeedMultiplier = 3f,
-        Color? blockColor = null)
+        Color? blockColor = null,
+        float goldenChance = 0.1f)
     {
         this.density = density;
         this.manaChance = keycardChance;
@@ -52,6 +54,7 @@ public class GameSettings
         this.levelWidth = levelWidth;
         this.lavaSpeedMultiplier = acidSpeedMultiplier;
         this.blockColor = blockColor;
+        this.goldenChance = goldenChance;
     }
 
     static GameSettings()
