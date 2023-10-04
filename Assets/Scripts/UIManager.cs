@@ -45,4 +45,9 @@ public class UIManager : MonoBehaviour
     {
         GameManager.instance.LoadScene(SceneID.title);
     }
+
+    public void ButtonPress()
+    {
+        SoundManager.instance.ButtonPress();
+    }
 }

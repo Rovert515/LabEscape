@@ -38,4 +38,9 @@ public class MainMenu : MonoBehaviour
     {
         GameManager.instance.SetSettings(SettingsPreset.blitz);
     }
+
+    public void ButtonPress()
+    {
+        SoundManager.instance.ButtonPress();
+    }
 }

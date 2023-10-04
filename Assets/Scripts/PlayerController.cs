@@ -115,6 +115,7 @@ public class PlayerController : MonoBehaviour
         {
             keycardCount += keycard.value;
             Destroy(keycard.gameObject);
+            SoundManager.instance.Pickup();
             return true;
         }
         return false;
