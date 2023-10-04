@@ -28,6 +28,7 @@ public class GameSettings
     public int levelWidth;
     public HeightBasedFloat lavaSpeed;
     public float lavaSpeedMultiplier;
+    public Color? blockColor;
 
     public GameSettings
         (HeightBasedFloat density,
@@ -38,7 +39,8 @@ public class GameSettings
         float moveTime = 0.25f,
         float shiftTime = 0.25f,
         int levelWidth = 5,
-        float acidSpeedMultiplier = 3f)
+        float acidSpeedMultiplier = 3f,
+        Color? blockColor = null)
     {
         this.density = density;
         this.manaChance = keycardChance;
@@ -49,6 +51,7 @@ public class GameSettings
         this.shiftTime = shiftTime;
         this.levelWidth = levelWidth;
         this.lavaSpeedMultiplier = acidSpeedMultiplier;
+        this.blockColor = blockColor;
     }
 
     static GameSettings()
@@ -66,17 +69,20 @@ public class GameSettings
         presets[SettingsPreset.easy] = new GameSettings(
             density: new HeightBasedFloat(0.3f),
             keycardChance: new HeightBasedFloat(0.15f),
-            acidSpeed: new HeightBasedFloat(1f)
+            acidSpeed: new HeightBasedFloat(1f),
+            blockColor: Color.green
             );
         presets[SettingsPreset.medium] = new GameSettings(
             density: new HeightBasedFloat(0.325f),
             keycardChance: new HeightBasedFloat(0.125f),
-            acidSpeed: new HeightBasedFloat(1.5f)
+            acidSpeed: new HeightBasedFloat(1.5f),
+            blockColor: Color.yellow
             );
         presets[SettingsPreset.hard] = new GameSettings(
             density: new HeightBasedFloat(0.35f),
             keycardChance: new HeightBasedFloat(0.1f),
-            acidSpeed: new HeightBasedFloat(2f)
+            acidSpeed: new HeightBasedFloat(2f),
+            blockColor: Color.red
             );
         presets[SettingsPreset.puzzle] = new GameSettings(
             density: new HeightBasedFloat(0.4f),
@@ -90,6 +96,13 @@ public class GameSettings
             moveTime: 0.15f,
             shiftTime: 0.15f
             );
+        foreach (GameSettings preset in presets.Values)
+        {
+            if (preset.blockColor == null)
+            {
+                preset.blockColor = Color.white;
+            }
+        }
     }
 }
 

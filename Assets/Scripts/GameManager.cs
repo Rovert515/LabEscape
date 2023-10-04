@@ -17,16 +17,6 @@ public enum PlayState
     loading
 }
 
-public enum Difficulty
-{
-    Dynamic,
-    Easy,
-    Medium,
-    Hard,
-    Puzzle,
-    Blitz
-}
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -36,8 +26,8 @@ public class GameManager : MonoBehaviour
     public event GameEvent initializeOthers;
     public event GameEvent gameUpdate;
 
-    public SettingsPreset settingsPreset;
     public SceneID currentScene;
+    public SettingsPreset settingsPreset;
 
     private PlayState playState;
 
@@ -62,30 +52,12 @@ public class GameManager : MonoBehaviour
         InitializeScene(currentScene);
     }
 
-    public void SetDifficulty(Difficulty difficulty)
+    public void SetDifficulty(SettingsPreset preset)
     {
-        switch (difficulty)
-        {
-            case Difficulty.Dynamic:
-                settingsPreset = SettingsPreset.dynamic;
-                break;
-            case Difficulty.Easy:
-                settingsPreset = SettingsPreset.easy;
-                break;
-            case Difficulty.Medium:
-                settingsPreset = SettingsPreset.medium;
-                break;
-            case Difficulty.Hard:
-                settingsPreset = SettingsPreset.hard;
-                break;
-            case Difficulty.Puzzle:
-                settingsPreset = SettingsPreset.puzzle;
-                break;
-            case Difficulty.Blitz:
-                settingsPreset = SettingsPreset.blitz;
-                break;
-        }
+        settingsPreset = preset;
+        settings = GameSettings.presets[settingsPreset];
     }
+
     public void LoadScene(SceneID scene)
     {
         AsyncOperation asyncLoad;
