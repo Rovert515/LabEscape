@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 120}
+  m_AnchoredPosition: {x: 0, y: 105}
   m_SizeDelta: {x: 360.044, y: 162.3394}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &205531880
@@ -878,8 +878,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69254410a40a06f4487bb07c643dc5b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  easyMusic: {fileID: 8300000, guid: 81fec0464da8e6545b728a3ad9325f70, type: 3}
-  buttonPress: {fileID: 8300000, guid: 97ee07cfe9ee7c245a94c9de923f3e36, type: 3}
 --- !u!114 &928716463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1034,7 +1032,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Back
+  m_text: Back to Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -1439,7 +1437,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -188}
+  m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1538478675
@@ -1725,7 +1723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2066889825
 RectTransform:
   m_ObjectHideFlags: 0
