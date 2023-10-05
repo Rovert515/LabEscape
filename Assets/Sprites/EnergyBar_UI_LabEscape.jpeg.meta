@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 09ca409e0258543e095906f998f4bdf2
+guid: 4d10bef87c7784c4692470f9327a29ec
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -147,49 +147,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: LabEscape-Pause-PopUp_0
-      rect:
-        serializedVersion: 2
-        x: 55
-        y: 62
-        width: 145
-        height: 72
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fd7589185e9254a5285dc232f4f19783
-      internalID: 1360776515
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: LabEscape-Pause-PopUp_1
-      rect:
-        serializedVersion: 2
-        x: 56
-        y: 161
-        width: 144
-        height: 40
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d679a1f49067d4607a3a26ad31bb377c
-      internalID: -1275855640
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -200,9 +158,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      LabEscape-Pause-PopUp_0: 1360776515
-      LabEscape-Pause-PopUp_1: -1275855640
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
