@@ -7,11 +7,12 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     private AudioClip easyMusic;
+    private AudioClip hardMusic;
     private AudioClip buttonPress;
     private AudioClip pickup;
     private AudioClip goodPickup;
 
-    private AudioSource[] musicSources = new AudioSource[2];
+    private AudioSource[][] musicSources = { new AudioSource[2], new AudioSource[2], new AudioSource[2] };
     private AudioSource oneShotSource;
     private int flip = 0;
 
@@ -26,30 +27,44 @@ public class SoundManager : MonoBehaviour
 
         oneShotSource = GetComponent<AudioSource>();
         easyMusic = Resources.Load<AudioClip>("Sounds/easy music");
+        hardMusic = Resources.Load<AudioClip>("Sounds/hard music");
         buttonPress = Resources.Load<AudioClip>("Sounds/button press");
         pickup = Resources.Load<AudioClip>("Sounds/pickup");
         goodPickup = Resources.Load<AudioClip>("Sounds/good pickup");
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                GameObject child = new GameObject("Music Source");
+                child.transform.parent = gameObject.transform;
+                musicSources[i][j] = child.AddComponent<AudioSource>();
+                musicSources[i][j].volume = 0.7f;
+            }
+        }
+        musicSources[0][0].clip = easyMusic;
+        musicSources[0][1].clip = easyMusic;
+        musicSources[1][0].clip = easyMusic;
+        musicSources[1][1].clip = easyMusic;
+        musicSources[2][0].clip = hardMusic;
+        musicSources[2][1].clip = hardMusic;
+
+        nextMusicStart = AudioSettings.dspTime + 1f;
     }
 
     private void Start()
     {
-        for (int i = 0; i < 2; i++)
-        {
-            GameObject child = new GameObject("Music Source");
-            child.transform.parent = gameObject.transform;
-            musicSources[i] = child.AddComponent<AudioSource>();
-            musicSources[i].volume = 0.7f;
-        }
-
-        nextMusicStart = AudioSettings.dspTime + 1f;
+        
     }
 
     private void Update()
     {
         if (AudioSettings.dspTime > nextMusicStart - 1)
         {
-            musicSources[flip].clip = easyMusic;
-            musicSources[flip].PlayScheduled(nextMusicStart);
+            for (int i = 0; i < 3; i++)
+            {
+                musicSources[i][flip].PlayScheduled(nextMusicStart);
+            }
             flip = 1 - flip;
             nextMusicStart += easyMusic.length - 0.05;
         }
@@ -68,5 +83,23 @@ public class SoundManager : MonoBehaviour
     public void GoodPickup()
     {
         oneShotSource.PlayOneShot(goodPickup, 0.5f);
+    }
+
+    public void SwitchMusic(int newSong)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                if (i == newSong)
+                {
+                    musicSources[i][j].mute = false;
+                }
+                else
+                {
+                    musicSources[i][j].mute = true;
+                }
+            }
+        }
     }
 }
