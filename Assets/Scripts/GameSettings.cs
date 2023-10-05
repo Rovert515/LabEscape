@@ -26,8 +26,8 @@ public class GameSettings
     public float moveTime;
     public float shiftTime;
     public int levelWidth;
-    public HeightBasedFloat lavaSpeed;
-    public float lavaSpeedMultiplier;
+    public HeightBasedFloat acidSpeed;
+    public float acidSpeedMultiplier;
     public Color? blockColor;
     public float goldenChance;
 
@@ -40,19 +40,19 @@ public class GameSettings
         float moveTime = 0.25f,
         float shiftTime = 0.25f,
         int levelWidth = 5,
-        float acidSpeedMultiplier = 3f,
+        float acidSpeedMultiplier = 2.5f,
         Color? blockColor = null,
         float goldenChance = 0.1f)
     {
         this.density = density;
         this.manaChance = keycardChance;
-        this.lavaSpeed = acidSpeed;
+        this.acidSpeed = acidSpeed;
         this.manaValue = keycardValue;
         this.startingMana = startingMana;
         this.moveTime = moveTime;
         this.shiftTime = shiftTime;
         this.levelWidth = levelWidth;
-        this.lavaSpeedMultiplier = acidSpeedMultiplier;
+        this.acidSpeedMultiplier = acidSpeedMultiplier;
         this.blockColor = blockColor;
         this.goldenChance = goldenChance;
     }
