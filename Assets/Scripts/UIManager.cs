@@ -11,6 +11,14 @@ public class UIManager : MonoBehaviour
     private Label manaLabel;
     private Label heightLabel;
 
+    public Image healthBarBackground;
+    public Image healthBarForeground;
+    public float currentHealth = 0f;
+    public float maxHealth = 15f; // Set the maximum health
+
+    //Font Set
+    public Font bangerFont;
+
     private void Awake()
     {
         instance = this;
@@ -33,6 +41,7 @@ public class UIManager : MonoBehaviour
         public void UpdateUI()
     {
         manaLabel.text = "Shifts: " + PlayerController.instance.keycardCount;
+        heightLabel.style.unityFont = bangerFont;
         heightLabel.text = "Height: " + LevelController.instance.bottomRow;
     }
     
