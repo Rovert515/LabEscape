@@ -50,22 +50,36 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        settings = GameSettings.presets[settingsPreset];
         SetSettings(settingsPreset);
         InitializeScene(currentScene);
     }
 
     public void SetSettings(SettingsPreset preset)
     {
+        settings = GameSettings.presets[preset];
         if (settingsPreset != preset)
         {
-            settingsPreset = preset;
-            settings = GameSettings.presets[settingsPreset];
             if (currentScene == SceneID.title)
             {
                 initializeLevel();
             }
         }
+        switch (preset)
+        {
+            case SettingsPreset.easy:
+                SoundManager.instance.SwitchMusic(0);
+                break;
+            case SettingsPreset.medium:
+                SoundManager.instance.SwitchMusic(1);
+                break;
+            case SettingsPreset.hard:
+                SoundManager.instance.SwitchMusic(2);
+                break;
+            default:
+                SoundManager.instance.SwitchMusic(-1);
+                break;
+        }
+        settingsPreset = preset;
     }
 
     public void LoadScene(SceneID scene)

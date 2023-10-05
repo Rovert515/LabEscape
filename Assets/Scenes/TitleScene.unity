@@ -2682,7 +2682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentScene: 0
-  settingsPreset: 1
+  settingsPreset: 3
 --- !u!4 &1020913915
 Transform:
   m_ObjectHideFlags: 0
