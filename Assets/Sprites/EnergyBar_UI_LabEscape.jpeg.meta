@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 09ca409e0258543e095906f998f4bdf2
+guid: 4d10bef87c7784c4692470f9327a29ec
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -149,13 +149,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LabEscape-Pause-PopUp_0
+      name: EnergyBar_UI_LabEscape_0
       rect:
         serializedVersion: 2
-        x: 55
-        y: 62
-        width: 145
-        height: 72
+        x: 110
+        y: 602
+        width: 283
+        height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -163,29 +163,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd7589185e9254a5285dc232f4f19783
-      internalID: 1360776515
+      spriteID: e93eb9ae597f048d5957709abf9ab8f5
+      internalID: -1116513535
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: LabEscape-Pause-PopUp_1
+      name: EnergyBar_UI_LabEscape_1
       rect:
         serializedVersion: 2
-        x: 56
-        y: 161
-        width: 144
-        height: 40
+        x: 724
+        y: 332
+        width: 14
+        height: 37
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d679a1f49067d4607a3a26ad31bb377c
-      internalID: -1275855640
+      spriteID: fd7f7647bf84b48f5a6ca13f43fa5f5e
+      internalID: 114243453
       vertices: []
       indices: 
       edges: []
@@ -201,8 +201,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      LabEscape-Pause-PopUp_0: 1360776515
-      LabEscape-Pause-PopUp_1: -1275855640
+      EnergyBar_UI_LabEscape_0: -1116513535
+      EnergyBar_UI_LabEscape_1: 114243453
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

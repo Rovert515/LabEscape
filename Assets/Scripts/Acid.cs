@@ -26,13 +26,13 @@ public class Acid : MonoBehaviour
     private void GameUpdate()
     {
         // Lave moves 3x faster if it is offscreen
-        if (height > Camera.main.transform.position.y - Camera.main.orthographicSize)
+        if (height > Camera.main.transform.position.y - Camera.main.orthographicSize - 6f)
         {
-            height += GameManager.instance.settings.lavaSpeed.GetValue() * Time.deltaTime;
+            height += GameManager.instance.settings.acidSpeed.GetValue() * Time.deltaTime;
         }
         else
         {
-            height += GameManager.instance.settings.lavaSpeedMultiplier * GameManager.instance.settings.lavaSpeed.GetValue() * Time.deltaTime;
+            height += GameManager.instance.settings.acidSpeedMultiplier * GameManager.instance.settings.acidSpeed.GetValue() * Time.deltaTime;
         }
         UpdatePos();
     }

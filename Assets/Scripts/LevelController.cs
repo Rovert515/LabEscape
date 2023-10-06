@@ -45,6 +45,7 @@ public class LevelController : MonoBehaviour
         width = cellShift.x * levelWidth;
         topRow = 0;
         bottomRow = 0;
+        ClearLevel();
         UpdateLevelBounds();
     }
     private void GameUpdate()
@@ -93,6 +94,17 @@ public class LevelController : MonoBehaviour
         }
         Debug.LogWarning("Attempted to destroy nonexistent block at " + gridPos, transform);
         return false;
+    }
+    private void ClearLevel()
+    {
+        foreach (Transform child in transform)
+        {
+            Block block = child.GetComponent<Block>();
+            if (block != null)
+            {
+                Destroy(block.gameObject);
+            }
+        }
     }
 
     // Add or remove blocks so that the level has the proper bounds

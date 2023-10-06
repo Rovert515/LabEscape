@@ -5,10 +5,19 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
+    
     public static UIManager instance { get; private set; }
 
     private Label manaLabel;
     private Label heightLabel;
+
+    public Image healthBarBackground;
+    public Image healthBarForeground;
+    public float currentHealth = 0f;
+    public float maxHealth = 15f; // Set the maximum health
+
+    //Font Set
+    public Font bangerFont;
 
     private void Awake()
     {
@@ -32,6 +41,22 @@ public class UIManager : MonoBehaviour
         public void UpdateUI()
     {
         manaLabel.text = "Shifts: " + PlayerController.instance.keycardCount;
+        heightLabel.style.unityFont = bangerFont;
         heightLabel.text = "Height: " + LevelController.instance.bottomRow;
+    }
+    
+
+    public void TryAgain()
+    {
+        GameManager.instance.LoadScene(SceneID.game);
+    }
+    public void Back()
+    {
+        GameManager.instance.LoadScene(SceneID.title);
+    }
+
+    public void ButtonPress()
+    {
+        SoundManager.instance.ButtonPress();
     }
 }

@@ -26,8 +26,10 @@ public class GameSettings
     public float moveTime;
     public float shiftTime;
     public int levelWidth;
-    public HeightBasedFloat lavaSpeed;
-    public float lavaSpeedMultiplier;
+    public HeightBasedFloat acidSpeed;
+    public float acidSpeedMultiplier;
+    public Color? blockColor;
+    public float goldenChance;
 
     public GameSettings
         (HeightBasedFloat density,
@@ -38,17 +40,21 @@ public class GameSettings
         float moveTime = 0.25f,
         float shiftTime = 0.25f,
         int levelWidth = 5,
-        float acidSpeedMultiplier = 3f)
+        float acidSpeedMultiplier = 2.5f,
+        Color? blockColor = null,
+        float goldenChance = 0.1f)
     {
         this.density = density;
         this.manaChance = keycardChance;
-        this.lavaSpeed = acidSpeed;
+        this.acidSpeed = acidSpeed;
         this.manaValue = keycardValue;
         this.startingMana = startingMana;
         this.moveTime = moveTime;
         this.shiftTime = shiftTime;
         this.levelWidth = levelWidth;
-        this.lavaSpeedMultiplier = acidSpeedMultiplier;
+        this.acidSpeedMultiplier = acidSpeedMultiplier;
+        this.blockColor = blockColor;
+        this.goldenChance = goldenChance;
     }
 
     static GameSettings()
@@ -64,19 +70,22 @@ public class GameSettings
             acidSpeed: new HeightBasedFloat(1f, 0.5f, max: 2.5f)
             );
         presets[SettingsPreset.easy] = new GameSettings(
-            density: new HeightBasedFloat(0.275f),  // 0.3f
-            keycardChance: new HeightBasedFloat(0.165f), // 0.15f
-            acidSpeed: new HeightBasedFloat(1.15f) // 1.0f
+            blockColor: Color.Lerp(Color.white, Color.green, 0.3f)
+            acidSpeed: new HeightBasedFloat(1f),
+            keycardChance: new HeightBasedFloat(0.15f),
+            density: new HeightBasedFloat(0.3f),
             );
         presets[SettingsPreset.medium] = new GameSettings(
-            density: new HeightBasedFloat(0.3f), // 0.275f
-            keycardChance: new HeightBasedFloat(0.140f), // 0.125f
-            acidSpeed: new HeightBasedFloat(1.5f) // unchanged
+            density: new HeightBasedFloat(0.325f),
+            acidSpeed: new HeightBasedFloat(1.5f),
+            blockColor: Color.Lerp(Color.white, Color.yellow, 0.3f)
+            keycardChance: new HeightBasedFloat(0.125f),
             );
         presets[SettingsPreset.hard] = new GameSettings(
-            density: new HeightBasedFloat(0.325f), // 3.5f
-            keycardChance: new HeightBasedFloat(0.115f), // 0.1f
-            acidSpeed: new HeightBasedFloat(1.8f) // 2.0f
+            blockColor: Color.Lerp(Color.white, Color.red, 0.3f)
+            acidSpeed: new HeightBasedFloat(2f),
+            keycardChance: new HeightBasedFloat(0.1f),
+            density: new HeightBasedFloat(0.35f),
             );
         presets[SettingsPreset.puzzle] = new GameSettings(
             density: new HeightBasedFloat(0.4f),
@@ -90,6 +99,13 @@ public class GameSettings
             moveTime: 0.15f,
             shiftTime: 0.15f
             );
+        foreach (GameSettings preset in presets.Values)
+        {
+            if (preset.blockColor == null)
+            {
+                preset.blockColor = Color.white;
+            }
+        }
     }
 }
 

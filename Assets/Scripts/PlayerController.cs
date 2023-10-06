@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 // Handles the input and manages the player's resources
 public class PlayerController : MonoBehaviour
 {
-    public EndScreenManager endScreenManager;
-
     public static PlayerController instance { get; private set; }
 
     public Acid lava;
@@ -104,14 +102,7 @@ public class PlayerController : MonoBehaviour
         // Restart scene if player goes below the height of the lava
         if (transform.position.y < lava.height)
         {
-            //GameManager.instance.LoadScene(SceneID.game);
-            endScreenManager.ShowEndScreen();
-
-            //not working
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                GameManager.instance.LoadScene(SceneID.game);
-            }
+            GameManager.instance.GameOver();
         }
     }
 
@@ -119,11 +110,21 @@ public class PlayerController : MonoBehaviour
     // Called by PlayerMovement when the player ends a movement
     public bool PickUp()
     {
-        Keycard mana = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Keycard>();
-        if (mana != null)
+        Keycard keycard = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Keycard>();
+        if (keycard != null)
         {
-            keycardCount += GameManager.instance.settings.manaValue;
-            Destroy(mana.gameObject);
+            keycardCount += keycard.value;
+            
+            if (keycard.value > 1)
+            {
+                SoundManager.instance.GoodPickup();
+            }
+            else
+            {
+                SoundManager.instance.Pickup();
+            }
+            
+            Destroy(keycard.gameObject);
             return true;
         }
         return false;

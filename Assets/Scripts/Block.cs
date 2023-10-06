@@ -113,21 +113,7 @@ public class Block : MonoBehaviour
         else
         {
             Tilemap tilemap = Instantiate(tilemapPrefab, transform).GetComponent<Tilemap>();
-
-            // Check if bottomRow is 10 or 20 and adjust the hue accordingly
-            Color tileColor = Color.white; // Default color
-            if (gridPos.y >= 50)
-            {
-                // Adjust color for green 
-                tileColor = Color.green;
-            }
-            if (gridPos.y >= 100)
-            {
-                // Adjust color for red
-                tileColor = Color.red;
-            }
-            tilemap.color = tileColor;
-
+            tilemap.color = (Color) GameManager.instance.settings.blockColor;
         }
     }
 

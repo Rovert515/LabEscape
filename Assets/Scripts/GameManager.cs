@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SceneID
+public enum SceneID // these should be in the same order as the scenes are in the build manager
 {
     title,
     game
@@ -14,17 +14,8 @@ public enum PlayState
 {
     playing,
     paused,
+    gameOver,
     loading
-}
-
-public enum Difficulty
-{
-    Dynamic,
-    Easy,
-    Medium,
-    Hard,
-    Puzzle,
-    Blitz
 }
 
 public class GameManager : MonoBehaviour
@@ -36,10 +27,11 @@ public class GameManager : MonoBehaviour
     public event GameEvent initializeOthers;
     public event GameEvent gameUpdate;
 
-    public SettingsPreset settingsPreset;
     public SceneID currentScene;
+    public SettingsPreset settingsPreset;
 
     private PlayState playState;
+    private Canvas gameOverCanvas;
 
     public GameSettings settings { get; private set; }
     public float gameTime { get; private set; }
@@ -58,34 +50,38 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        settings = GameSettings.presets[settingsPreset];
+        SetSettings(settingsPreset);
         InitializeScene(currentScene);
     }
 
-    public void SetDifficulty(Difficulty difficulty)
+    public void SetSettings(SettingsPreset preset)
     {
-        switch (difficulty)
+        settings = GameSettings.presets[preset];
+        if (settingsPreset != preset)
         {
-            case Difficulty.Dynamic:
-                settingsPreset = SettingsPreset.dynamic;
+            if (currentScene == SceneID.title)
+            {
+                initializeLevel();
+            }
+        }
+        switch (preset)
+        {
+            case SettingsPreset.easy:
+                SoundManager.instance.SwitchMusic(0);
                 break;
-            case Difficulty.Easy:
-                settingsPreset = SettingsPreset.easy;
+            case SettingsPreset.medium:
+                SoundManager.instance.SwitchMusic(1);
                 break;
-            case Difficulty.Medium:
-                settingsPreset = SettingsPreset.medium;
+            case SettingsPreset.hard:
+                SoundManager.instance.SwitchMusic(2);
                 break;
-            case Difficulty.Hard:
-                settingsPreset = SettingsPreset.hard;
-                break;
-            case Difficulty.Puzzle:
-                settingsPreset = SettingsPreset.puzzle;
-                break;
-            case Difficulty.Blitz:
-                settingsPreset = SettingsPreset.blitz;
+            default:
+                SoundManager.instance.SwitchMusic(-1);
                 break;
         }
+        settingsPreset = preset;
     }
+
     public void LoadScene(SceneID scene)
     {
         AsyncOperation asyncLoad;
@@ -114,6 +110,12 @@ public class GameManager : MonoBehaviour
             case SceneID.game:
                 gameTime = 0;
                 playState = PlayState.playing;
+                gameOverCanvas = GameObject.Find("Game Over Canvas").GetComponent<Canvas>();
+                if (gameOverCanvas == null)
+                {
+                    Debug.LogError("Failed to find the game over canvas", transform);
+                }
+                gameOverCanvas.enabled = false;
                 settings = GameSettings.presets[settingsPreset];
                 LevelController.instance.levelWidth = settings.levelWidth;
                 if (initializeLevel != null)
@@ -168,8 +170,28 @@ public class GameManager : MonoBehaviour
                             LoadScene(SceneID.title);
                         }
                         break;
+                    case PlayState.gameOver:
+                        if (Input.GetKeyDown(KeyCode.R))
+                        {
+                            LoadScene(SceneID.game);
+                        }
+                        else if (Input.GetKeyDown(KeyCode.M))
+                        {
+                            LoadScene(SceneID.title);
+                        }
+                        break;
                 }
                 break;
         }
     }
+
+    public void GameOver()
+    {
+        if (currentScene == SceneID.game)
+        {
+            gameOverCanvas.enabled = true;
+            playState = PlayState.gameOver;
+        }
+    }
 }
+
