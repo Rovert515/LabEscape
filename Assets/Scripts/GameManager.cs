@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public enum SceneID // these should be in the same order as the scenes are in the build manager
 {
     title,
-    game
+    game,
+    pause
 }
 
 public enum PlayState
@@ -161,6 +162,7 @@ public class GameManager : MonoBehaviour
                         }
                         break;
                     case PlayState.paused:
+                        LoadScene(SceneID.pause);
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
                             playState = PlayState.playing;
