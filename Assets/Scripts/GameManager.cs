@@ -164,19 +164,11 @@ public class GameManager : MonoBehaviour
                         {
                             ResumeGame();
                         }
-                        if (Input.GetKeyDown(KeyCode.M))
-                        {
-                            LoadScene(SceneID.title);
-                        }
                         break;
                     case PlayState.gameOver:
                         if (Input.GetKeyDown(KeyCode.R))
                         {
                             LoadScene(SceneID.game);
-                        }
-                        else if (Input.GetKeyDown(KeyCode.M))
-                        {
-                            LoadScene(SceneID.title);
                         }
                         break;
                 }

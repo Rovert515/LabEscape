@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
@@ -9,11 +10,9 @@ public class GameUI : MonoBehaviour
     public GameObject pausedUI;
     public GameObject gameOverUI;
     public ShiftBar shiftBar;
+    public TMP_Text scoreText;
 
     public static GameUI instance { get; private set; }
-
-    private Label manaLabel;
-    private Label heightLabel;
 
     private void Awake()
     {
@@ -32,6 +31,7 @@ public class GameUI : MonoBehaviour
     private void UpdateUI()
     {
         shiftBar.SetValue(PlayerController.instance.keycardCount);
+        scoreText.text = LevelController.instance.bottomRow.ToString();
     }
     public void PlayingScreen()
     {
