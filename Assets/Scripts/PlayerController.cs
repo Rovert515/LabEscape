@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     }
     public void Initialize()
     {
-        keycardCount = GameManager.instance.settings.startingMana;
+        keycardCount = GameManager.instance.settings.startingKeycards;
         PickUp();
     }
     private void GameUpdate()

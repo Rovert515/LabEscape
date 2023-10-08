@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -1509206022408614172}
   - component: {fileID: 801228567854538953}
   m_Layer: 0
-  m_Name: Mana
+  m_Name: Keycard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,3 +133,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6d73e268d79d5849970fa81b379aecc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  value: 0

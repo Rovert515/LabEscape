@@ -19,12 +19,12 @@ public class GameSettings
 {
     public static Dictionary<SettingsPreset, GameSettings> presets = new Dictionary<SettingsPreset, GameSettings>();
 
-    public HeightBasedFloat density;
+    public HeightBasedFloat density; // chance of a room having a wall
     public HeightBasedFloat keycardChance;
     public int keycardValue;
-    public int startingMana;
-    public float moveTime;
-    public float shiftTime;
+    public int startingKeycards;
+    public float moveTime; // secs it takes player to move
+    public float shiftTime; // secs it takes level to shift
     public int levelWidth;
     public HeightBasedFloat acidSpeed;
     public float acidCatchUp; // How much extra speed to add per height that the lava is off the screen, scales with acidSpeed
@@ -48,7 +48,7 @@ public class GameSettings
         this.keycardChance = keycardChance;
         this.acidSpeed = acidSpeed;
         this.keycardValue = keycardValue;
-        this.startingMana = startingMana;
+        this.startingKeycards = startingMana;
         this.moveTime = moveTime;
         this.shiftTime = shiftTime;
         this.levelWidth = levelWidth;
@@ -109,6 +109,7 @@ public class GameSettings
     }
 }
 
+// Class for a float value that will change as the player gains height
 public class HeightBasedFloat
 {
     public float initialValue;

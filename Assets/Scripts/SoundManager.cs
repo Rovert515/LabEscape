@@ -93,7 +93,7 @@ public class SoundManager : MonoBehaviour
     }
     public void Shift()
     {
-        oneShotSource.PlayOneShot(shiftSound, 0.6f);
+        oneShotSource.PlayOneShot(shiftSound, 0.8f);
     }
     public void GameOver()
     {

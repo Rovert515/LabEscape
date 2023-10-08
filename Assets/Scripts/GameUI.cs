@@ -11,6 +11,7 @@ public class GameUI : MonoBehaviour
     public GameObject gameOverUI;
     public ShiftBar shiftBar;
     public TMP_Text scoreText;
+    public TMP_Text scoreReportText;
 
     public static GameUI instance { get; private set; }
 
@@ -32,6 +33,7 @@ public class GameUI : MonoBehaviour
     {
         shiftBar.SetValue(PlayerController.instance.keycardCount);
         scoreText.text = LevelController.instance.bottomRow.ToString();
+        scoreReportText.text = "Score: " + LevelController.instance.bottomRow;
     }
     public void PlayingScreen()
     {
