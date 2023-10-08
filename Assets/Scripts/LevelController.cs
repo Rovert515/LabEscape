@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 // Manages all of the blocks in the level and directs their creation, movement, and destruction
 public class LevelController : MonoBehaviour
