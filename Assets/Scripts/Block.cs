@@ -108,10 +108,10 @@ public class Block : MonoBehaviour
     // Use roomCode to find the correct tilemap prefab, then instantiate it and make it our child
     public void MakeTilemap()
     {
-        GameObject tilemapPrefab = Resources.Load<GameObject>("Block Themes/Lab/room_" + roomCode);
+        GameObject tilemapPrefab = Resources.Load<GameObject>("Block Tilemap Prefabs/room_" + roomCode);
         if (tilemapPrefab == null)
         {
-            Debug.LogWarning("Failed to find tilemap prefab at Block Themes/Lab/room_" + roomCode, transform);
+            Debug.LogWarning("Failed to find tilemap prefab at Block Tilemap Prefabs/room_" + roomCode, transform);
         }
         else
         {
