@@ -2042,7 +2042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentScene: 0
-  settingsPreset: 2
+  settingsPreset: 0
   playState: 0
 --- !u!4 &1020913915
 Transform:

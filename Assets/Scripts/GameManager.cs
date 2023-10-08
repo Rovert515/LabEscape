@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
                 SoundManager.instance.SwitchMusic(2);
                 break;
             default:
-                SoundManager.instance.SwitchMusic(-1);
+                SoundManager.instance.SwitchMusic(1);
                 break;
         }
         settingsPreset = preset;
