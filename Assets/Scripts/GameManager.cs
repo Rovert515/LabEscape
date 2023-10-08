@@ -190,6 +190,7 @@ public class GameManager : MonoBehaviour
         {
             gameUI.GameOverScreen();
             playState = PlayState.gameOver;
+            SoundManager.instance.GameOver();
         }
     }
     public void PauseGame()

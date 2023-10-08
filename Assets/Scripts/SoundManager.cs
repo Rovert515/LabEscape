@@ -14,6 +14,7 @@ public class SoundManager : MonoBehaviour
     private AudioClip pickup;
     private AudioClip goodPickup;
     private AudioClip shiftSound;
+    private AudioClip gameOver;
 
     private AudioSource[][] musicSources = { new AudioSource[2], new AudioSource[2], new AudioSource[2] };
     private AudioSource oneShotSource;
@@ -36,6 +37,7 @@ public class SoundManager : MonoBehaviour
         pickup = Resources.Load<AudioClip>("Sounds/pickup");
         goodPickup = Resources.Load<AudioClip>("Sounds/good pickup");
         shiftSound = Resources.Load<AudioClip>("Sounds/shift");
+        gameOver = Resources.Load<AudioClip>("Sounds/game over");
 
         for (int i = 0; i < 3; i++)
         {
@@ -91,7 +93,11 @@ public class SoundManager : MonoBehaviour
     }
     public void Shift()
     {
-        oneShotSource.PlayOneShot(shiftSound, 0.5f);
+        oneShotSource.PlayOneShot(shiftSound, 0.6f);
+    }
+    public void GameOver()
+    {
+        oneShotSource.PlayOneShot(gameOver, 0.4f);
     }
 
     public void SwitchMusic(int newSong)
