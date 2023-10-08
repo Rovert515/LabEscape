@@ -96,7 +96,7 @@ public class Block : MonoBehaviour
             roomCode = new string(codeArray);
         }
         MakeTilemap();
-        if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance.GetValue())
+        if (Random.Range(0f, 1f) <= GameManager.instance.settings.keycardChance.GetValue())
         {
             Instantiate(manaPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
         }

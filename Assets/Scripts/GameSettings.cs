@@ -20,14 +20,14 @@ public class GameSettings
     public static Dictionary<SettingsPreset, GameSettings> presets = new Dictionary<SettingsPreset, GameSettings>();
 
     public HeightBasedFloat density;
-    public HeightBasedFloat manaChance;
-    public int manaValue;
+    public HeightBasedFloat keycardChance;
+    public int keycardValue;
     public int startingMana;
     public float moveTime;
     public float shiftTime;
     public int levelWidth;
     public HeightBasedFloat acidSpeed;
-    public float acidSpeedMultiplier;
+    public float acidCatchUp; // How much extra speed to add per height that the lava is off the screen, scales with acidSpeed
     public Color? blockColor;
     public float goldenChance;
 
@@ -40,19 +40,19 @@ public class GameSettings
         float moveTime = 0.25f,
         float shiftTime = 0.25f,
         int levelWidth = 5,
-        float acidSpeedMultiplier = 2.5f,
+        float acidCatchUp = 0.3f,
         Color? blockColor = null,
         float goldenChance = 0.1f)
     {
         this.density = density;
-        this.manaChance = keycardChance;
+        this.keycardChance = keycardChance;
         this.acidSpeed = acidSpeed;
-        this.manaValue = keycardValue;
+        this.keycardValue = keycardValue;
         this.startingMana = startingMana;
         this.moveTime = moveTime;
         this.shiftTime = shiftTime;
         this.levelWidth = levelWidth;
-        this.acidSpeedMultiplier = acidSpeedMultiplier;
+        this.acidCatchUp = acidCatchUp;
         this.blockColor = blockColor;
         this.goldenChance = goldenChance;
     }
