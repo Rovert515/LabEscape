@@ -7,7 +7,9 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
 
     private AudioClip easyMusic;
+    private AudioClip mediumMusic;
     private AudioClip hardMusic;
+    
     private AudioClip buttonPress;
     private AudioClip pickup;
     private AudioClip goodPickup;
@@ -27,6 +29,7 @@ public class SoundManager : MonoBehaviour
 
         oneShotSource = GetComponent<AudioSource>();
         easyMusic = Resources.Load<AudioClip>("Sounds/easy music");
+        mediumMusic = Resources.Load<AudioClip>("Sounds/medium music");
         hardMusic = Resources.Load<AudioClip>("Sounds/hard music");
         buttonPress = Resources.Load<AudioClip>("Sounds/button press");
         pickup = Resources.Load<AudioClip>("Sounds/pickup");
@@ -39,13 +42,13 @@ public class SoundManager : MonoBehaviour
                 GameObject child = new GameObject("Music Source");
                 child.transform.parent = gameObject.transform;
                 musicSources[i][j] = child.AddComponent<AudioSource>();
-                musicSources[i][j].volume = 0.7f;
+                musicSources[i][j].volume = 0.4f;
             }
         }
         musicSources[0][0].clip = easyMusic;
         musicSources[0][1].clip = easyMusic;
-        musicSources[1][0].clip = easyMusic;
-        musicSources[1][1].clip = easyMusic;
+        musicSources[1][0].clip = mediumMusic;
+        musicSources[1][1].clip = mediumMusic;
         musicSources[2][0].clip = hardMusic;
         musicSources[2][1].clip = hardMusic;
 
