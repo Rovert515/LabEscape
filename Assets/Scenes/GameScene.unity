@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 205531881}
   - component: {fileID: 205531880}
   m_Layer: 5
-  m_Name: PopUp
+  m_Name: Game Over Pop Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1057,7 +1057,7 @@ GameObject:
   - component: {fileID: 898066762}
   - component: {fileID: 898066761}
   m_Layer: 5
-  m_Name: TryAgainButton
+  m_Name: Try Again Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1358,7 +1358,7 @@ GameObject:
   - component: {fileID: 1120370375}
   - component: {fileID: 1120370374}
   m_Layer: 0
-  m_Name: ScoreContainer
+  m_Name: Score Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1712,7 +1712,7 @@ GameObject:
   - component: {fileID: 1296090655}
   - component: {fileID: 1296090654}
   m_Layer: 5
-  m_Name: BackButton
+  m_Name: Back Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2154,7 +2154,7 @@ GameObject:
   - component: {fileID: 1485593180}
   - component: {fileID: 1485593179}
   m_Layer: 5
-  m_Name: Game Over Text
+  m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2289,7 +2289,7 @@ GameObject:
   - component: {fileID: 1538478676}
   - component: {fileID: 1538478675}
   m_Layer: 5
-  m_Name: BackButton
+  m_Name: Back Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2578,7 +2578,7 @@ GameObject:
   - component: {fileID: 1619047894}
   - component: {fileID: 1619047893}
   m_Layer: 0
-  m_Name: PausedTitle
+  m_Name: Paused Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3084,7 +3084,7 @@ GameObject:
   - component: {fileID: 2014317280}
   - component: {fileID: 2014317279}
   m_Layer: 0
-  m_Name: ShiftBarContainer
+  m_Name: Shift Bar Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3161,7 +3161,7 @@ GameObject:
   - component: {fileID: 2043934943}
   - component: {fileID: 2043934942}
   m_Layer: 5
-  m_Name: ResumeButton
+  m_Name: Resume Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -600,7 +600,7 @@ GameObject:
   - component: {fileID: 326694061}
   - component: {fileID: 326694060}
   m_Layer: 0
-  m_Name: MainTitle
+  m_Name: Main Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1079,7 +1079,7 @@ GameObject:
   - component: {fileID: 784311317}
   - component: {fileID: 784311316}
   m_Layer: 5
-  m_Name: BackButton
+  m_Name: Back Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1236,7 +1236,7 @@ GameObject:
   - component: {fileID: 803413529}
   - component: {fileID: 803413528}
   m_Layer: 5
-  m_Name: DifficultyButton
+  m_Name: Difficulty Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1587,7 +1587,7 @@ GameObject:
   - component: {fileID: 889750354}
   - component: {fileID: 889750353}
   m_Layer: 5
-  m_Name: TutorialButton
+  m_Name: Tutorial Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1744,7 +1744,7 @@ GameObject:
   - component: {fileID: 897647355}
   - component: {fileID: 897647354}
   m_Layer: 5
-  m_Name: EasyButton
+  m_Name: Easy Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2177,7 +2177,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1069794385}
   m_Layer: 5
-  m_Name: MainMenu
+  m_Name: Main Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2219,7 +2219,7 @@ GameObject:
   - component: {fileID: 1203554778}
   - component: {fileID: 1203554777}
   m_Layer: 5
-  m_Name: PlayButton
+  m_Name: Play Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2498,7 +2498,7 @@ GameObject:
   - component: {fileID: 1466779832}
   - component: {fileID: 1466779831}
   m_Layer: 5
-  m_Name: DynamicButton
+  m_Name: Dynamic Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2640,7 +2640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1476630764}
   m_Layer: 5
-  m_Name: TutorialMenu
+  m_Name: Tutorial Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2681,7 +2681,7 @@ GameObject:
   - component: {fileID: 1487959386}
   - component: {fileID: 1487959385}
   m_Layer: 5
-  m_Name: MediumButton
+  m_Name: Medium Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2985,7 +2985,7 @@ GameObject:
   - component: {fileID: 1572742451}
   - component: {fileID: 1572742450}
   m_Layer: 0
-  m_Name: DifficultyTitle
+  m_Name: Difficulty Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3062,7 +3062,7 @@ GameObject:
   - component: {fileID: 1583058416}
   - component: {fileID: 1583058415}
   m_Layer: 5
-  m_Name: BackButton
+  m_Name: Back Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3829,7 +3829,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2003709773}
   m_Layer: 5
-  m_Name: DifficultyMenu
+  m_Name: Difficulty Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3873,7 +3873,7 @@ GameObject:
   - component: {fileID: 2024730423}
   - component: {fileID: 2024730422}
   m_Layer: 5
-  m_Name: HardButton
+  m_Name: Hard Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4163,7 +4163,7 @@ GameObject:
   - component: {fileID: 2116735053}
   - component: {fileID: 2116735052}
   m_Layer: 0
-  m_Name: InstructionsTitle
+  m_Name: Instructions Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
