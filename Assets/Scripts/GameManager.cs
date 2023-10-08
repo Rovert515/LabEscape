@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 public enum SceneID // these should be in the same order as the scenes are in the build manager
 {
     title,
-    game,
-    pause
+    game
 }
 
 public enum PlayState
@@ -30,9 +29,9 @@ public class GameManager : MonoBehaviour
 
     public SceneID currentScene;
     public SettingsPreset settingsPreset;
+    public PlayState playState;
 
-    private PlayState playState;
-    private Canvas gameOverCanvas;
+    private GameUI gameUI;
 
     public GameSettings settings { get; private set; }
     public float gameTime { get; private set; }
@@ -110,13 +109,12 @@ public class GameManager : MonoBehaviour
                 break;
             case SceneID.game:
                 gameTime = 0;
-                playState = PlayState.playing;
-                gameOverCanvas = GameObject.Find("Game Over Canvas").GetComponent<Canvas>();
-                if (gameOverCanvas == null)
+                gameUI = GameObject.Find("UI").GetComponent<GameUI>();
+                if (gameUI == null)
                 {
-                    Debug.LogError("Failed to find the game over canvas", transform);
+                    Debug.LogError("Failed to find the GameUI script", transform);
                 }
-                gameOverCanvas.enabled = false;
+                ResumeGame();
                 settings = GameSettings.presets[settingsPreset];
                 LevelController.instance.levelWidth = settings.levelWidth;
                 if (initializeLevel != null)
@@ -158,14 +156,13 @@ public class GameManager : MonoBehaviour
                         }
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
-                            playState = PlayState.paused;
+                            PauseGame();
                         }
                         break;
                     case PlayState.paused:
-                        LoadScene(SceneID.pause);
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
-                            playState = PlayState.playing;
+                            ResumeGame();
                         }
                         if (Input.GetKeyDown(KeyCode.M))
                         {
@@ -191,8 +188,24 @@ public class GameManager : MonoBehaviour
     {
         if (currentScene == SceneID.game)
         {
-            gameOverCanvas.enabled = true;
+            gameUI.GameOverScreen();
             playState = PlayState.gameOver;
+        }
+    }
+    public void PauseGame()
+    {
+        if (currentScene == SceneID.game)
+        {
+            gameUI.PausedScreen();
+            playState = PlayState.paused;
+        }
+    }
+    public void ResumeGame()
+    {
+        if (currentScene == SceneID.game)
+        {
+            gameUI.PlayingScreen();
+            playState = PlayState.playing;
         }
     }
 }
