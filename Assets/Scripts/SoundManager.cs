@@ -30,6 +30,8 @@ public class SoundManager : MonoBehaviour
         }
 
         oneShotSource = GetComponent<AudioSource>();
+
+        // Gather clip resources
         easyMusic = Resources.Load<AudioClip>("Sounds/easy music");
         mediumMusic = Resources.Load<AudioClip>("Sounds/medium music");
         hardMusic = Resources.Load<AudioClip>("Sounds/hard music");
@@ -39,6 +41,7 @@ public class SoundManager : MonoBehaviour
         shiftSound = Resources.Load<AudioClip>("Sounds/shift");
         gameOver = Resources.Load<AudioClip>("Sounds/game over");
 
+        // Creat music sources with audio players, 2 for each song
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 2; j++)
@@ -49,6 +52,8 @@ public class SoundManager : MonoBehaviour
                 musicSources[i][j].volume = 0.2f;
             }
         }
+
+        // Set the music clips
         musicSources[0][0].clip = easyMusic;
         musicSources[0][1].clip = easyMusic;
         musicSources[1][0].clip = mediumMusic;
@@ -56,16 +61,13 @@ public class SoundManager : MonoBehaviour
         musicSources[2][0].clip = hardMusic;
         musicSources[2][1].clip = hardMusic;
 
+        // Start music 1 second after starting the game
         nextMusicStart = AudioSettings.dspTime + 1f;
-    }
-
-    private void Start()
-    {
-        
     }
 
     private void Update()
     {
+        // One second before the song ends, queue the next one
         if (AudioSettings.dspTime > nextMusicStart - 1)
         {
             for (int i = 0; i < 3; i++)
@@ -73,20 +75,19 @@ public class SoundManager : MonoBehaviour
                 musicSources[i][flip].PlayScheduled(nextMusicStart);
             }
             flip = 1 - flip;
-            nextMusicStart += easyMusic.length - 0.05;
+            nextMusicStart += easyMusic.length - 0.05; // Chop off a bit to make to looping smoother
         }
     }
 
+    // Functions to play various one shot sounds
     public void ButtonPress()
     {
         oneShotSource.PlayOneShot(buttonPress, 0.5f);
     }
-
     public void Pickup()
     {
         oneShotSource.PlayOneShot(pickup, 0.5f);
     }
-
     public void GoodPickup()
     {
         oneShotSource.PlayOneShot(goodPickup, 0.5f);
@@ -100,6 +101,7 @@ public class SoundManager : MonoBehaviour
         oneShotSource.PlayOneShot(gameOver, 0.4f);
     }
 
+    // Switch to a different song by muting/unmuting sources
     public void SwitchMusic(int newSong)
     {
         for (int i = 0; i < 3; i++)

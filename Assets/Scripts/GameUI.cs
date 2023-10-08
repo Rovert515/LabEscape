@@ -19,6 +19,7 @@ public class GameUI : MonoBehaviour
     {
         instance = this;
     }
+
     private void OnEnable()
     {
         GameManager.instance.initializeOthers += UpdateUI;
@@ -29,12 +30,15 @@ public class GameUI : MonoBehaviour
         GameManager.instance.initializeOthers -= UpdateUI;
         GameManager.instance.gameUpdate -= UpdateUI;
     }
+
     private void UpdateUI()
     {
-        shiftBar.SetValue(PlayerController.instance.keycardCount);
+        shiftBar.SetValue(PlayerController.instance.shiftCount);
         scoreText.text = LevelController.instance.bottomRow.ToString();
         scoreReportText.text = "Score: " + LevelController.instance.bottomRow;
     }
+
+    // Enable and disable the required menus
     public void PlayingScreen()
     {
         playingUI.SetActive(true);
@@ -53,6 +57,8 @@ public class GameUI : MonoBehaviour
         pausedUI.SetActive(false);
         gameOverUI.SetActive(true);
     }
+
+    // Functions that are called by the buttons
     public void TryAgain()
     {
         GameManager.instance.LoadScene(SceneID.game);

@@ -3694,7 +3694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54fcc39ddc9b4a14d9daf9a33ed2bb9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lava: {fileID: 1715441008}
+  acid: {fileID: 1715441008}
 --- !u!58 &8879015041580133826
 CircleCollider2D:
   m_ObjectHideFlags: 0

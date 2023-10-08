@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ShiftBar : MonoBehaviour
 {
-    public Sprite[] sprites;
+    public Sprite[] sprites; // All the bar sprites in order
 
     private Image myImage;
 

@@ -27,6 +27,7 @@ public class LevelController : MonoBehaviour
         instance = this;
         tilemapRenderer = GetComponentInChildren<TilemapRenderer>();
     }
+
     private void OnEnable()
     {
         GameManager.instance.initializeLevel += Initialize;
@@ -37,9 +38,9 @@ public class LevelController : MonoBehaviour
         GameManager.instance.initializeLevel -= Initialize;
         GameManager.instance.gameUpdate -= GameUpdate;
     }
+
     public void Initialize()
     {
-        //transform.localPosition = Vector3.zero;
         grid = GetComponent<Grid>();
         cellShift = grid.cellSize + grid.cellGap;
         width = cellShift.x * levelWidth;
@@ -48,6 +49,7 @@ public class LevelController : MonoBehaviour
         ClearLevel();
         UpdateLevelBounds();
     }
+
     private void GameUpdate()
     {
         UpdateLevelBounds();
@@ -110,7 +112,7 @@ public class LevelController : MonoBehaviour
     // Add or remove blocks so that the level has the proper bounds
     public void UpdateLevelBounds()
     {
-        // update bounds variables
+        // Update bounds variables
         topRow = grid.WorldToCell(Camera.main.ViewportToWorldPoint(Vector3.up)).y + 1;
         bottomRow = grid.WorldToCell(Camera.main.ViewportToWorldPoint(Vector3.zero)).y;
         if (GameManager.instance.currentScene == SceneID.title)
@@ -257,6 +259,7 @@ public class LevelController : MonoBehaviour
         return false;
     }
 
+    // Shifts and random row/column in a random direction
     public bool RandomShift()
     {
         Vector3Int[] compass = { Vector3Int.right, Vector3Int.left, Vector3Int.up, Vector3Int.down };

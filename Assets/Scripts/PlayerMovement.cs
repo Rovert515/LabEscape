@@ -7,11 +7,13 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance { get; private set; }
 
-    public bool moving { get; private set; } // if the player is currently moving
-    public bool riding { get; private set; }
+    public bool moving { get; private set; } // If the player is currently moving
+    public bool riding { get; private set; } // If the player is currently a child of a block
     public Vector3Int gridPos { get; private set; }
 
     private Animator animator;
+
+    // Information about the current movement
     private float moveStartTime;
     private Vector3Int moveDir;
 
@@ -20,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
         instance = this;
         animator = GetComponent<Animator>();
     }
+
     private void OnEnable()
     {
         GameManager.instance.initializeOthers += Initialize;
@@ -30,17 +33,22 @@ public class PlayerMovement : MonoBehaviour
         GameManager.instance.initializeOthers -= Initialize;
         GameManager.instance.gameUpdate -= GameUpdate;
     }
+
     public void Initialize()
     {
         moving = false;
+
+        // Set initial position
         transform.position = LevelController.instance.transform.position + new Vector3(1, 1) * LevelController.instance.width / 2;
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
         transform.position = LevelController.instance.CenterOfBlock(gridPos);
     }
+
     private void GameUpdate()
     {
         if (moving)
         {
+            // Stop the move if it is time, otherwise keep moving
             if (GameManager.instance.gameTime >= moveStartTime + GameManager.instance.settings.moveTime)
             {
                 moving = false;
@@ -50,12 +58,14 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                // move towards gridPos
+                // Move towards gridPos
                 Vector3 newPos = LevelController.instance.CenterOfBlock(gridPos) - Vector3.Scale((Vector3)moveDir, LevelController.instance.cellShift) * (1-(GameManager.instance.gameTime - moveStartTime)/GameManager.instance.settings.moveTime);
-                newPos.x = (newPos.x + LevelController.instance.width) % LevelController.instance.width;
+                newPos.x = (newPos.x + LevelController.instance.width) % LevelController.instance.width; // Wrap around horizontal edge
                 transform.position = newPos;
             }
         }
+
+        // While riding, wrap horizontally
         if (riding)
         {
             Vector3 newPos = transform.position;
@@ -101,6 +111,7 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
+    // Attach the player to the block it is on
     public void StartRiding(Vector3Int shift)
     {
         if (!riding)
@@ -111,6 +122,8 @@ public class PlayerMovement : MonoBehaviour
             gridPos = new Vector3Int((gridPos.x + LevelController.instance.levelWidth) % LevelController.instance.levelWidth, gridPos.y);
         }
     }
+
+    // Unattach player
     public void StopRiding()
     {
         riding = false;

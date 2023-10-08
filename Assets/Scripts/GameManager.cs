@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SceneID // these should be in the same order as the scenes are in the build manager
+public enum SceneID // These should be in the same order as the scenes are in the build manager
 {
     title,
     game
@@ -31,13 +31,14 @@ public class GameManager : MonoBehaviour
     public SettingsPreset settingsPreset;
     public PlayState playState;
 
-    private GameUI gameUI;
-
     public GameSettings settings { get; private set; }
     public float gameTime { get; private set; }
 
+    private GameUI gameUI;
+
     private void Awake()
     {
+        // Set up singleton, or self destruct if there is another "Managers" object coming in from another scene
         if (instance == null)
         {
             instance = this;
@@ -48,15 +49,19 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     private void Start()
     {
         SetSettings(settingsPreset);
         InitializeScene(currentScene);
     }
 
+    // Change the difficulty and update some things in response
     public void SetSettings(SettingsPreset preset)
     {
         settings = GameSettings.presets[preset];
+
+        // When choosing the difficulty on the title screen, we want to reload the level so that the color changes in the background
         if (settingsPreset != preset)
         {
             if (currentScene == SceneID.title)
@@ -64,6 +69,8 @@ public class GameManager : MonoBehaviour
                 initializeLevel();
             }
         }
+
+        // Change music accordingly
         switch (preset)
         {
             case SettingsPreset.easy:
@@ -79,9 +86,11 @@ public class GameManager : MonoBehaviour
                 SoundManager.instance.SwitchMusic(1);
                 break;
         }
+
         settingsPreset = preset;
     }
 
+    // Load a new scene and initialize it once it has been loaded
     public void LoadScene(SceneID scene)
     {
         AsyncOperation asyncLoad;
@@ -93,6 +102,8 @@ public class GameManager : MonoBehaviour
             InitializeScene(scene);
         };
     }
+
+    // Initialize a scene; calls all of the initiazation functions of various scripts
     private void InitializeScene(SceneID scene)
     {
         currentScene = scene;
@@ -134,12 +145,17 @@ public class GameManager : MonoBehaviour
         switch (currentScene)
         {
             case SceneID.title:
+                // Keep time moving
                 gameTime += Time.deltaTime;
                 if (gameUpdate != null)
                 {
                     gameUpdate();
                 }
+
+                // Keep the level anchored in the lower left corner of the screen
                 LevelController.instance.transform.position = Camera.main.ScreenToWorldPoint(Vector3.zero) + Vector3.forward * 10;
+
+                // Occasionally shift the background
                 if (Random.Range(0f, 1f) < 0.01)
                 {
                     LevelController.instance.RandomShift();
@@ -149,11 +165,13 @@ public class GameManager : MonoBehaviour
                 switch (playState)
                 {
                     case PlayState.playing:
+                        // Keep time moving
                         gameTime += Time.deltaTime;
                         if (gameUpdate != null)
                         {
                             gameUpdate();
                         }
+
                         if (Input.GetKeyDown(KeyCode.Escape))
                         {
                             PauseGame();
@@ -185,6 +203,7 @@ public class GameManager : MonoBehaviour
             SoundManager.instance.GameOver();
         }
     }
+
     public void PauseGame()
     {
         if (currentScene == SceneID.game)
@@ -193,6 +212,7 @@ public class GameManager : MonoBehaviour
             playState = PlayState.paused;
         }
     }
+
     public void ResumeGame()
     {
         if (currentScene == SceneID.game)

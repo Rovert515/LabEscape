@@ -19,13 +19,13 @@ public class GameSettings
 {
     public static Dictionary<SettingsPreset, GameSettings> presets = new Dictionary<SettingsPreset, GameSettings>();
 
-    public HeightBasedFloat density; // chance of a room having a wall
+    public HeightBasedFloat density; // Chance of a room having a wall
     public HeightBasedFloat keycardChance;
     public int keycardValue;
     public int startingKeycards;
-    public float moveTime; // secs it takes player to move
-    public float shiftTime; // secs it takes level to shift
-    public int levelWidth;
+    public float moveTime; // Seconds it takes player to move
+    public float shiftTime; // Seconds it takes level to shift
+    public int levelWidth; // How many rooms wide the level is
     public HeightBasedFloat acidSpeed;
     public float acidCatchUp; // How much extra speed to add per height that the lava is off the screen, scales with acidSpeed
     public Color? blockColor;
@@ -59,11 +59,8 @@ public class GameSettings
 
     static GameSettings()
     {
-        presets[SettingsPreset.testing] = new GameSettings(
-            density: new HeightBasedFloat(0.2f),
-            keycardChance: new HeightBasedFloat(0.1f, 0.5f, max: 0.5f),
-            acidSpeed: new HeightBasedFloat(0f, 5f)
-            );
+        // Define the presets
+
         presets[SettingsPreset.dynamic] = new GameSettings(
             density: new HeightBasedFloat(0.3f, 0.025f, max: 0.375f),
             keycardChance: new HeightBasedFloat(0.15f, -0.025f, min: 0.075f),
@@ -87,6 +84,14 @@ public class GameSettings
             acidSpeed: new HeightBasedFloat(2f),
             blockColor: Color.Lerp(Color.white, Color.red, 0.3f)
             );
+
+        // Unused presets
+
+        presets[SettingsPreset.testing] = new GameSettings(
+            density: new HeightBasedFloat(0.2f),
+            keycardChance: new HeightBasedFloat(0.1f, 0.5f, max: 0.5f),
+            acidSpeed: new HeightBasedFloat(0f, 5f)
+            );
         presets[SettingsPreset.puzzle] = new GameSettings(
             density: new HeightBasedFloat(0.4f),
             keycardChance: new HeightBasedFloat(0.1f),
@@ -99,6 +104,8 @@ public class GameSettings
             moveTime: 0.15f,
             shiftTime: 0.15f
             );
+
+        // Make the default color white
         foreach (GameSettings preset in presets.Values)
         {
             if (preset.blockColor == null)
@@ -113,7 +120,7 @@ public class GameSettings
 public class HeightBasedFloat
 {
     public float initialValue;
-    public float changePerHeight; // change in value for every 100 height gained
+    public float changePerHeight; // Change in value for every 100 height gained
     public float min;
     public float max;
     public HeightBasedFloat(float initialValue, float changePerHeight=0, float min=Mathf.NegativeInfinity, float max=Mathf.Infinity)
