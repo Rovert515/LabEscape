@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour
     private AudioClip buttonPress;
     private AudioClip pickup;
     private AudioClip goodPickup;
+    private AudioClip shiftSound;
 
     private AudioSource[][] musicSources = { new AudioSource[2], new AudioSource[2], new AudioSource[2] };
     private AudioSource oneShotSource;
@@ -34,6 +35,7 @@ public class SoundManager : MonoBehaviour
         buttonPress = Resources.Load<AudioClip>("Sounds/button press");
         pickup = Resources.Load<AudioClip>("Sounds/pickup");
         goodPickup = Resources.Load<AudioClip>("Sounds/good pickup");
+        shiftSound = Resources.Load<AudioClip>("Sounds/shift");
 
         for (int i = 0; i < 3; i++)
         {
@@ -42,7 +44,7 @@ public class SoundManager : MonoBehaviour
                 GameObject child = new GameObject("Music Source");
                 child.transform.parent = gameObject.transform;
                 musicSources[i][j] = child.AddComponent<AudioSource>();
-                musicSources[i][j].volume = 0.4f;
+                musicSources[i][j].volume = 0.2f;
             }
         }
         musicSources[0][0].clip = easyMusic;
@@ -86,6 +88,10 @@ public class SoundManager : MonoBehaviour
     public void GoodPickup()
     {
         oneShotSource.PlayOneShot(goodPickup, 0.5f);
+    }
+    public void Shift()
+    {
+        oneShotSource.PlayOneShot(shiftSound, 0.5f);
     }
 
     public void SwitchMusic(int newSong)

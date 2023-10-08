@@ -89,6 +89,7 @@ public class PlayerController : MonoBehaviour
                     if (PlayerMovement.instance.Shift(inputDir))
                     {
                         keycardCount--;
+                        SoundManager.instance.Shift();
                     }
                 }
             }
