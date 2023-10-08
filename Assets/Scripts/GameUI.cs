@@ -8,6 +8,7 @@ public class GameUI : MonoBehaviour
     public GameObject playingUI;
     public GameObject pausedUI;
     public GameObject gameOverUI;
+    public ShiftBar shiftBar;
 
     public static GameUI instance { get; private set; }
 
@@ -20,13 +21,17 @@ public class GameUI : MonoBehaviour
     }
     private void OnEnable()
     {
-        //GameManager.instance.initializeOthers += UpdateUI;
-        //GameManager.instance.gameUpdate += UpdateUI;
+        GameManager.instance.initializeOthers += UpdateUI;
+        GameManager.instance.gameUpdate += UpdateUI;
     }
     private void OnDisable()
     {
-        //GameManager.instance.initializeOthers -= UpdateUI;
-        //GameManager.instance.gameUpdate -= UpdateUI;
+        GameManager.instance.initializeOthers -= UpdateUI;
+        GameManager.instance.gameUpdate -= UpdateUI;
+    }
+    private void UpdateUI()
+    {
+        shiftBar.SetValue(PlayerController.instance.keycardCount);
     }
     public void PlayingScreen()
     {

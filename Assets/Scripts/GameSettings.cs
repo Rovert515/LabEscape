@@ -36,7 +36,7 @@ public class GameSettings
         HeightBasedFloat keycardChance,
         HeightBasedFloat acidSpeed,
         int keycardValue = 1,
-        int startingMana = 5,
+        int startingMana = 6,
         float moveTime = 0.25f,
         float shiftTime = 0.25f,
         int levelWidth = 5,

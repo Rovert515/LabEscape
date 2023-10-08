@@ -114,7 +114,11 @@ public class PlayerController : MonoBehaviour
         if (keycard != null)
         {
             keycardCount += keycard.value;
-            
+            if ( keycardCount > 12)
+            {
+                keycardCount = 12;
+            }
+
             if (keycard.value > 1)
             {
                 SoundManager.instance.GoodPickup();
