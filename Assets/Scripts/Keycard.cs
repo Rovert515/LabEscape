@@ -11,7 +11,7 @@ public class Keycard : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    private void Start()
+    public void Randomize()
     {
         // Determine if the card is golden
         if (Random.Range(0f, 1f) < GameManager.instance.settings.goldenChance)
@@ -22,6 +22,7 @@ public class Keycard : MonoBehaviour
         else
         {
             value = 1;
+            sr.color = Color.white;
         }
     }
 }

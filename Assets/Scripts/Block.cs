@@ -97,7 +97,8 @@ public class Block : MonoBehaviour
         MakeTilemap();
         if (Random.Range(0f, 1f) <= GameManager.instance.settings.keycardChance.GetValue())
         {
-            Instantiate(keycardPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
+            Keycard keycard = Instantiate(keycardPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform).GetComponent<Keycard>();
+            keycard.Randomize();
         }
     }
 
