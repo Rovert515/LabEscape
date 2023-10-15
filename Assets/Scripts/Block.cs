@@ -1,22 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
-using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Block : MonoBehaviour
 {
-    public GameObject manaPrefab;
-    public string roomCode;
+    public GameObject keycardPrefab;
+    public string roomCode; // A string of 0s and 1s which keeps track of which sides of the room have walls
 
     public Vector3Int gridPos { get; private set; }
     public bool fading { get; private set; } // Whether or not the block is in the process of being deleted
-    public bool shifting { get; private set; }
+    public bool shifting { get; private set; } // Whether or not the block is currently shifting
 
     private Grid grid;
-    
     private float shiftStartTime;
     private Vector3 shiftStartPos;
 
@@ -27,8 +22,6 @@ public class Block : MonoBehaviour
         shifting = false;
         gridPos = LevelController.instance.grid.WorldToCell(transform.position);
     }
-
- 
 
     private void OnEnable()
     {
@@ -45,10 +38,13 @@ public class Block : MonoBehaviour
     {
         if (shifting)
         {
+            // Check if the block is ready to stop shifting, otherwise keep moving
             if (GameManager.instance.gameTime >= shiftStartTime + GameManager.instance.settings.shiftTime)
             {
                 shifting = false;
                 transform.position = LevelController.instance.grid.CellToWorld(gridPos);
+
+                // If this block is being ridden by the player, tell the player to stop riding the block
                 if (PlayerMovement.instance != null)
                 {
                     if (PlayerMovement.instance.gridPos == gridPos)
@@ -56,8 +52,11 @@ public class Block : MonoBehaviour
                         PlayerMovement.instance.StopRiding();
                     }
                 }
+
+                // If the block is fading, destroy it when it finishes shifting
                 if (fading)
                 {
+                    // Make sure we don't destroy the player if it is our child
                     PlayerMovement player = GetComponentInChildren<PlayerMovement>();
                     if (player != null)
                     {
@@ -68,13 +67,13 @@ public class Block : MonoBehaviour
             }
             else
             {
-                // move towards gridPos
+                // Move towards gridPos
                 transform.position = Vector3.Lerp(shiftStartPos, LevelController.instance.grid.CellToWorld(gridPos), (GameManager.instance.gameTime - shiftStartTime) / GameManager.instance.settings.shiftTime);
             }
         }
     }
 
-    // Randomly fill in the 4 side walls and create keycard pickup
+    // Randomly generate a room code, fill in the 4 side walls, and create keycard pickup
     public void Randomize()
     {
         roomCode = "";
@@ -96,19 +95,20 @@ public class Block : MonoBehaviour
             roomCode = new string(codeArray);
         }
         MakeTilemap();
-        if (Random.Range(0f, 1f) <= GameManager.instance.settings.manaChance.GetValue())
+        if (Random.Range(0f, 1f) <= GameManager.instance.settings.keycardChance.GetValue())
         {
-            Instantiate(manaPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform);
+            Keycard keycard = Instantiate(keycardPrefab, LevelController.instance.CenterOfBlock(gridPos), Quaternion.identity, transform).GetComponent<Keycard>();
+            keycard.Randomize();
         }
     }
 
-
+    // Use roomCode to find the correct tilemap prefab, then instantiate it and make it our child
     public void MakeTilemap()
     {
-        GameObject tilemapPrefab = Resources.Load<GameObject>("Block Themes/Lab/room_" + roomCode);
+        GameObject tilemapPrefab = Resources.Load<GameObject>("Block Tilemap Prefabs/room_" + roomCode);
         if (tilemapPrefab == null)
         {
-            Debug.LogWarning("Failed to find tilemap prefab at Block Themes/Lab/room_" + roomCode, transform);
+            Debug.LogWarning("Failed to find tilemap prefab at Block Tilemap Prefabs/room_" + roomCode, transform);
         }
         else
         {
@@ -116,8 +116,6 @@ public class Block : MonoBehaviour
             tilemap.color = (Color) GameManager.instance.settings.blockColor;
         }
     }
-
-    // GameManager.instance.settings.(colorChange or something)
 
     // Slide the block at a constant speed to gridPos + shift
     public bool Shift(Vector3Int shift)
@@ -127,6 +125,8 @@ public class Block : MonoBehaviour
             shifting = true; 
             shiftStartTime = GameManager.instance.gameTime;
             shiftStartPos = transform.position;
+
+            // If the player is on this block, tell them to start riding
             if (PlayerMovement.instance != null)
             {
                 if (PlayerMovement.instance.gridPos == gridPos)
@@ -134,6 +134,7 @@ public class Block : MonoBehaviour
                     PlayerMovement.instance.StartRiding(shift);
                 }
             }
+
             gridPos += shift;
             return true;
         }

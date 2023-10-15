@@ -1,17 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 // Handles the input and manages the player's resources
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance { get; private set; }
 
-    public Acid lava;
+    public Acid acid;
 
-    public int keycardCount { get; private set; }
+    public int shiftCount { get; private set; }
 
     // Vars to store information about the last input
     private float lastInputTime;
@@ -23,6 +19,7 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
     }
+
     private void OnEnable()
     {
         GameManager.instance.initializeOthers += Initialize;
@@ -33,11 +30,13 @@ public class PlayerController : MonoBehaviour
         GameManager.instance.initializeOthers -= Initialize;
         GameManager.instance.gameUpdate -= GameUpdate;
     }
+
     public void Initialize()
     {
-        keycardCount = GameManager.instance.settings.startingMana;
+        shiftCount = GameManager.instance.settings.startingKeycards;
         PickUp();
     }
+
     private void GameUpdate()
     {
         // Determine directional input
@@ -83,12 +82,13 @@ public class PlayerController : MonoBehaviour
             if (inputShift)
             {
                 // Attempt to shift if player has enough keycards
-                if (keycardCount > 0)
+                if (shiftCount > 0)
                 {
                     // If successful, consume a keycard
                     if (PlayerMovement.instance.Shift(inputDir))
                     {
-                        keycardCount--;
+                        shiftCount--;
+                        SoundManager.instance.Shift();
                     }
                 }
             }
@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Restart scene if player goes below the height of the lava
-        if (transform.position.y < lava.height)
+        if (transform.position.y < acid.height)
         {
             GameManager.instance.GameOver();
         }
@@ -113,8 +113,13 @@ public class PlayerController : MonoBehaviour
         Keycard keycard = LevelController.instance.GetBlock(PlayerMovement.instance.gridPos).GetComponentInChildren<Keycard>();
         if (keycard != null)
         {
-            keycardCount += keycard.value;
-            
+            shiftCount += keycard.value;
+            // Cap shift count
+            if ( shiftCount > 12)
+            {
+                shiftCount = 12;
+            }
+
             if (keycard.value > 1)
             {
                 SoundManager.instance.GoodPickup();

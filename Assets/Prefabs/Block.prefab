@@ -58,8 +58,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a731ca17613c264dbf4df008a51e51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallTile: {fileID: 11400000, guid: 5dc122fee89c8454483d8861fc5e4b92, type: 2}
-  manaPrefab: {fileID: 1412285994745015339, guid: 5756ef4e8f2c9c048b5cb736bc15c730, type: 3}
+  keycardPrefab: {fileID: 1412285994745015339, guid: 5756ef4e8f2c9c048b5cb736bc15c730, type: 3}
+  roomCode: 
 --- !u!212 &-8111250381086409100
 SpriteRenderer:
   m_ObjectHideFlags: 0
